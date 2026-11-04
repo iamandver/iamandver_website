@@ -6,7 +6,9 @@
 }
 
 html {
-    image-rendering : pixelated;
+    image-rendering          : pixelated;
+    -webkit-text-size-adjust : 100%;
+    text-size-adjust         : 100%;
 }
 
 /* Remove common default margins while keeping list spacing. */
