@@ -53,6 +53,23 @@ a:visited {
     color       : var(--color-text-emphasize);
 }
 
+input[type="file"] {
+    display : block;
+}
+
+input::file-selector-button {
+    margin-inline-end : 12px;
+    padding           : 4px 8px;
+    border            : none;
+    border-radius     : 0;
+    cursor            : pointer;
+    background-color  : var(--color-text);
+}
+
+input::file-selector-button:hover {
+    background-color : white;
+}
+
 .pixel-art {
     max-width : none;
     height    : auto;

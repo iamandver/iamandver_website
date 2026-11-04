@@ -1,6 +1,8 @@
 import "../css/common.css";
 import "../css/braille.css";
 
+import { type BrailleCell, BrailleConverter, type BrailleParams } from "./braille_converter.ts";
+
 window.addEventListener("DOMContentLoaded", () =>
 {
     init();
@@ -28,8 +30,14 @@ function setupImageUploading(): void
             return;
         }
 
-        const canvas = document.getElementById("source-image") as HTMLCanvasElement;
-        const ctx    = canvas.getContext("2d");
+        const sourceImage = document.getElementById("source-image") as HTMLCanvasElement;
+        const resultImage = document.getElementById("result-image");
+        const ctx         = sourceImage.getContext("2d");
+
+        if (!resultImage)
+        {
+            return;
+        }
 
         if (!ctx)
         {
@@ -42,11 +50,33 @@ function setupImageUploading(): void
 
             try
             {
-                canvas.width  = bitmap.width;
-                canvas.height = bitmap.height;
+                sourceImage.width  = bitmap.width;
+                sourceImage.height = bitmap.height;
 
                 ctx.drawImage(bitmap, 0, 0);
-                // const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels: ImageData = ctx.getImageData(0, 0, sourceImage.width, sourceImage.height);
+
+                const brailleConverter = new BrailleConverter(pixels);
+
+                const brailleParams: BrailleParams = {
+                    columns           : 128,
+                    rows              : 128,
+                    blackThreshold    : 64,
+                    alphaThreshold    : 32,
+                    gamma             : 0.6,
+                    greyscale         : true,
+                    normalizeGreyscale: false
+                };
+
+                const brailleCellMap = brailleConverter.Generate(brailleParams);
+
+                const text: string = brailleCellMap
+                    .map(row => row
+                        .map(cell => String.fromCodePoint(0x2800 + cell.dotMask))
+                        .join(""))
+                    .join("\n");
+
+                resultImage.textContent = text;
 
             } finally
             {
@@ -58,7 +88,3 @@ function setupImageUploading(): void
         }
     });
 }
-
-
-
-

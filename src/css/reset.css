@@ -52,6 +52,10 @@ textarea {
     font : inherit;
 }
 
+input::file-selector-button {
+    font : inherit;
+}
+
 table {
     border-collapse : collapse;
 }
