@@ -23,12 +23,83 @@ label[for="image-upload-button"] {
 }
 
 .preview-panel {
+    min-inline-size       : 0;
+    display               : grid;
+    grid-template-columns : repeat(2, minmax(0, 1fr));
+    gap                   : 16px;
+}
+
+.source-image-container {
     min-inline-size : 0;
 }
 
-.preview-panel > h2,
+.braille-controls {
+    display        : flex;
+    flex-direction : column;
+    min-inline-size : 0;
+}
+
+.control-list {
+    display        : flex;
+    flex-direction : column;
+    gap            : 8px;
+    min-inline-size : 0;
+    margin         : 0;
+    padding        : 0;
+    border         : 0;
+}
+
+.control-list:disabled {
+    opacity : 0.5;
+}
+
+.control {
+    display               : grid;
+    grid-template-columns : 20ch minmax(0, 1fr) 4ch;
+    align-items           : center;
+    gap                   : 8px;
+}
+
+.control input {
+    min-inline-size : 0;
+    margin          : 0;
+    accent-color    : var(--color-blue);
+}
+
+.control input[type="number"] {
+    grid-column      : 2 / -1;
+    inline-size      : 100%;
+    padding          : 2px 6px;
+    border           : 1px solid #404040;
+    border-radius    : 0;
+    background-color : var(--color-background);
+    color            : var(--color-text);
+}
+
+.control input[type="number"]:invalid {
+    border-color : var(--color-red);
+}
+
+.control input[type="range"] {
+    inline-size : 100%;
+}
+
+.control input[type="checkbox"] {
+    justify-self : start;
+}
+
+.control output {
+    text-align : end;
+}
+
+.source-image-container > h2,
+.braille-controls > h2,
 .result-heading {
     margin-block-end : 8px;
+}
+
+.result-panel {
+    min-inline-size : 0;
 }
 
 .result-heading {
@@ -74,4 +145,8 @@ label[for="image-upload-button"] {
     max-inline-size : 100%;
     block-size      : auto;
     margin-inline   : auto;
+}
+
+#source-image {
+    max-block-size : 220px;
 }

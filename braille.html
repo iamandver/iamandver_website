@@ -17,7 +17,10 @@
         <p class="converter-intro">This is a little experiment I have been working on recently. I really love ASCII art and was wondering if I
             could push it far enough to be used as game graphics. Then I discovered Braille characters, which is a great way to represent a 2 by
             4 pixel cluster. So I wrote a little image converter that takes any image and uses Braille characters to represent it as best as
-            possible. I have not started working on a game yet that might use this as graphics, but the image generation itself is pretty cool.
+            possible. What's really cool is that each character gets only one color, so the resulting image has a lower color resolution sort of
+            speak, which makes for very interesting patterns.
+
+            I have not started working on a game yet that might use this as graphics, but the image generation itself is pretty cool.
             There are a few parameters for you to play around with too. <span class="emphasize">Have fun!</span>
         </p>
 
@@ -29,13 +32,55 @@
     <div class="braille-converter-ui-root">
 
         <section class="preview-panel">
-            <h2>Source image</h2>
-            <div class="source-image preview-frame">
-                <canvas id="source-image"></canvas>
+
+            <div class="source-image-container">
+                <h2>Source image</h2>
+                <div class="source-image preview-frame">
+                    <canvas id="source-image"></canvas>
+                </div>
             </div>
+
+            <div id="braille-controls" class="braille-controls">
+                <h2>Settings</h2>
+                <fieldset id="conversion-settings" class="control-list" disabled>
+                    <div class="control">
+                        <label for="max-columns">Max columns</label>
+                        <input id="max-columns" type="number" min="1" max="512" step="1" value="128" required>
+                    </div>
+                    <div class="control">
+                        <label for="max-rows">Max rows</label>
+                        <input id="max-rows" type="number" min="1" max="512" step="1" value="128" required>
+                    </div>
+                    <div class="control">
+                        <label for="gamma">Gamma</label>
+                        <input id="gamma" type="range" min="0.1" max="3" step="0.05" value="0.6">
+                        <output id="gamma-value" for="gamma">0.60</output>
+                    </div>
+                    <div class="control">
+                        <label for="black-threshold">Black threshold</label>
+                        <input id="black-threshold" type="range" min="0" max="255" step="1" value="64">
+                        <output id="black-threshold-value" for="black-threshold">64</output>
+                    </div>
+                    <div class="control">
+                        <label for="alpha-threshold">Alpha threshold</label>
+                        <input id="alpha-threshold" type="range" min="0" max="255" step="1" value="32">
+                        <output id="alpha-threshold-value" for="alpha-threshold">32</output>
+                    </div>
+                    <div class="control">
+                        <label for="normalize-greyscale">Normalize</label>
+                        <input id="normalize-greyscale" type="checkbox" checked>
+                    </div>
+                    <div class="control">
+                        <label for="font-weight">Font weight</label>
+                        <input id="font-weight" type="range" min="10" max="100" step="1" value="60">
+                        <output id="font-weight-value" for="font-weight">60%</output>
+                    </div>
+                </fieldset>
+            </div>
+
         </section>
 
-        <section class="preview-panel">
+        <section class="result-panel">
             <div class="result-heading">
                 <div class="heading-left">
                     <h2>Braille</h2>

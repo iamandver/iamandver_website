@@ -29,9 +29,9 @@ The image-to-Braille converter from the C# `a_weird_day` project, ported to Type
 
 Colour output always uses a selected colour palette. The initial palette collection and any custom-palette controls are still open.
 
-Display the source and result vertically on a scrollable page. Keep the main area's width consistent with the homepage. The result fills that area and draws an evenly spaced dot grid on Canvas; its height follows the image proportions. Keep Unicode Braille text available for copying.
+Put a small source preview beside a flat list of settings, above the full-width result on a scrollable page. Keep the main area's width consistent with the homepage. The result draws an evenly spaced dot grid on Canvas; its height follows the image proportions. Keep Unicode Braille text available for copying.
 
-Next: live conversion controls for a loaded image. Feature the converter on the homepage with a preview and a link to its own tool page.
+Settings update live: max columns and rows, gamma, black and alpha thresholds, greyscale normalization, and font weight (dot size). Next: choose colour palettes and feature the converter on the homepage with a preview and a link to its own tool page.
 
 ## Still open
 

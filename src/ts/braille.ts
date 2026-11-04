@@ -14,8 +14,9 @@ function init(): void
     const status        = document.querySelector<HTMLElement>("#image-status");
     const copyButton    = document.querySelector<HTMLButtonElement>("#copy-braille");
     const copyStatus    = document.querySelector<HTMLElement>("#copy-status");
+    const settings      = document.querySelector<HTMLFieldSetElement>("#conversion-settings");
 
-    if (!input || !sourceImage || !resultImage || !resultPreview || !status || !copyButton || !copyStatus)
+    if (!input || !sourceImage || !resultImage || !resultPreview || !status || !copyButton || !copyStatus || !settings)
     {
         return;
     }
@@ -31,6 +32,7 @@ function init(): void
     let imageRequest                       = 0;
     let previewWidth                       = 0;
     let drawnPixelRatio                    = window.devicePixelRatio || 1;
+    let dotFill                            = 0.6;
 
     const params: BrailleParams = {
         columns           : 128,
@@ -45,7 +47,7 @@ function init(): void
     const drawResult = () =>
     {
         drawnPixelRatio = window.devicePixelRatio || 1;
-        renderBraille(cells, resultImage, previewWidth);
+        renderBraille(cells, resultImage, previewWidth, dotFill);
     };
     const observer   = new ResizeObserver(entries =>
                                           {
@@ -67,7 +69,6 @@ function init(): void
         }
     });
 
-    // Future settings handlers can regenerate from the same original pixels.
     const updateResult = () =>
     {
         if (!converter)
@@ -79,10 +80,66 @@ function init(): void
         const mode             = params.greyscale ? "greyscale" : "palette";
         status.textContent     = `${cells[0]!.length} × ${cells.length} cells · ${mode}`;
         copyButton.disabled    = false;
+        settings.disabled      = false;
         copyStatus.textContent = "";
 
         drawResult();
     };
+
+    const numericControls = [
+        ["max-columns", "columns"],
+        ["max-rows", "rows"],
+        ["gamma", "gamma"],
+        ["black-threshold", "blackThreshold"],
+        ["alpha-threshold", "alphaThreshold"]
+    ] as const;
+
+    for (const [id, key] of numericControls)
+    {
+        const control     = document.querySelector<HTMLInputElement>(`#${id}`)!;
+        const value       = document.querySelector<HTMLOutputElement>(`#${id}-value`);
+        control.value     = String(params[key]);
+        const updateValue = () =>
+        {
+            if (value)
+            {
+                value.value = key === "gamma" ? params[key].toFixed(2) : String(params[key]);
+            }
+        };
+        updateValue();
+
+        control.addEventListener("input", () =>
+        {
+            // Number fields can be temporarily empty while the user edits them.
+            if (!control.validity.valid)
+            {
+                return;
+            }
+
+            params[key] = control.valueAsNumber;
+            updateValue();
+            updateResult();
+        });
+    }
+
+    const normalize   = document.querySelector<HTMLInputElement>("#normalize-greyscale")!;
+    normalize.checked = params.normalizeGreyscale;
+    normalize.addEventListener("input", () =>
+    {
+        params.normalizeGreyscale = normalize.checked;
+        updateResult();
+    });
+
+    const weight      = document.querySelector<HTMLInputElement>("#font-weight")!;
+    const weightValue = document.querySelector<HTMLOutputElement>("#font-weight-value")!;
+    weight.value      = String(dotFill * 100);
+    weightValue.value = `${weight.value}%`;
+    weight.addEventListener("input", () =>
+    {
+        dotFill           = weight.valueAsNumber / 100;
+        weightValue.value = `${weight.value}%`;
+        drawResult();
+    });
 
     copyButton.addEventListener("click", async () =>
     {
@@ -143,7 +200,7 @@ function init(): void
     });
 }
 
-function renderBraille(cells: BrailleCell[][], output: HTMLCanvasElement, width: number): void
+function renderBraille(cells: BrailleCell[][], output: HTMLCanvasElement, width: number, dotFill: number): void
 {
     const rows    = cells.length;
     const columns = cells[0]?.length ?? 0;
@@ -172,8 +229,7 @@ function renderBraille(cells: BrailleCell[][], output: HTMLCanvasElement, width:
 
     const dotBits = [[1, 8], [2, 16], [4, 32], [64, 128]] as const;
 
-    const dotFill = 0.6;
-    const radius  = spacing * dotFill / 2;
+    const radius = spacing * dotFill / 2;
 
     for (const [rowIndex, row] of cells.entries())
     {
