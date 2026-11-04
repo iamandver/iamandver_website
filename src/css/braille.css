@@ -1,8 +1,3 @@
-main {
-    max-inline-size : calc(var(--min-inline-size) - var(--main-body-padding) * 2);
-    margin-inline   : auto;
-}
-
 label[for="image-upload-button"] {
     display            : block;
     margin-block-start : 16px;
@@ -34,62 +29,9 @@ label[for="image-upload-button"] {
 }
 
 .braille-controls {
-    display        : flex;
-    flex-direction : column;
+    display         : flex;
+    flex-direction  : column;
     min-inline-size : 0;
-}
-
-.control-list {
-    display        : flex;
-    flex-direction : column;
-    gap            : 8px;
-    min-inline-size : 0;
-    margin         : 0;
-    padding        : 0;
-    border         : 0;
-}
-
-.control-list:disabled {
-    opacity : 0.5;
-}
-
-.control {
-    display               : grid;
-    grid-template-columns : 20ch minmax(0, 1fr) 4ch;
-    align-items           : center;
-    gap                   : 8px;
-}
-
-.control input {
-    min-inline-size : 0;
-    margin          : 0;
-    accent-color    : var(--color-blue);
-}
-
-.control input[type="number"] {
-    grid-column      : 2 / -1;
-    inline-size      : 100%;
-    padding          : 2px 6px;
-    border           : 1px solid #404040;
-    border-radius    : 0;
-    background-color : var(--color-background);
-    color            : var(--color-text);
-}
-
-.control input[type="number"]:invalid {
-    border-color : var(--color-red);
-}
-
-.control input[type="range"] {
-    inline-size : 100%;
-}
-
-.control input[type="checkbox"] {
-    justify-self : start;
-}
-
-.control output {
-    text-align : end;
 }
 
 .source-image-container > h2,
@@ -115,30 +57,6 @@ label[for="image-upload-button"] {
     gap         : 12px;
 }
 
-.copy-braille {
-    padding          : 4px 8px;
-    border           : 1px solid #404040;
-    border-radius    : 0;
-    background-color : var(--color-background);
-    color            : var(--color-link);
-    cursor           : pointer;
-}
-
-.copy-braille:disabled {
-    opacity : 0.5;
-    cursor  : default;
-}
-
-.copy-braille:not(:disabled):hover {
-    border-color : var(--color-blue);
-}
-
-.preview-frame {
-    min-inline-size : 0;
-    padding         : 12px;
-    border          : 1px solid #404040;
-}
-
 #source-image,
 #result-image {
     display         : block;
@@ -148,5 +66,10 @@ label[for="image-upload-button"] {
 }
 
 #source-image {
-    max-block-size : 220px;
+    /*max-block-size : 220px;*/
+}
+
+/*placeholder*/
+.footer {
+    height : 128px;
 }

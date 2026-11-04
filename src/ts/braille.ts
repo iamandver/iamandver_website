@@ -1,4 +1,4 @@
-import "../css/common.css";
+import "./common.ts";
 import "../css/braille.css";
 
 import { type BrailleCell, BrailleConverter, type BrailleParams } from "./braille_converter.ts";

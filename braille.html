@@ -35,7 +35,7 @@
 
             <div class="source-image-container">
                 <h2>Source image</h2>
-                <div class="source-image preview-frame">
+                <div class="source-image panel-frame">
                     <canvas id="source-image"></canvas>
                 </div>
             </div>
@@ -45,11 +45,23 @@
                 <fieldset id="conversion-settings" class="control-list" disabled>
                     <div class="control">
                         <label for="max-columns">Max columns</label>
-                        <input id="max-columns" type="number" min="1" max="512" step="1" value="128" required>
+                        <div class="number-control">
+                            <input id="max-columns" type="number" min="1" max="512" step="1" value="128" required>
+                            <div class="number-stepper">
+                                <button class="number-step" type="button" data-step="up" aria-label="Increase max columns"></button>
+                                <button class="number-step" type="button" data-step="down" aria-label="Decrease max columns"></button>
+                            </div>
+                        </div>
                     </div>
                     <div class="control">
                         <label for="max-rows">Max rows</label>
-                        <input id="max-rows" type="number" min="1" max="512" step="1" value="128" required>
+                        <div class="number-control">
+                            <input id="max-rows" type="number" min="1" max="512" step="1" value="128" required>
+                            <div class="number-stepper">
+                                <button class="number-step" type="button" data-step="up" aria-label="Increase max rows"></button>
+                                <button class="number-step" type="button" data-step="down" aria-label="Decrease max rows"></button>
+                            </div>
+                        </div>
                     </div>
                     <div class="control">
                         <label for="gamma">Gamma</label>
@@ -84,12 +96,12 @@
             <div class="result-heading">
                 <div class="heading-left">
                     <h2>Braille</h2>
-                    <button id="copy-braille" class="copy-braille" type="button" disabled>Copy Braille</button>
+                    <button id="copy-braille" type="button" disabled>Copy Braille</button>
                     <span id="copy-status"></span>
                 </div>
                 <div id="image-status" class="image-status"></div>
             </div>
-            <div id="result-preview" class="result-image preview-frame">
+            <div id="result-preview" class="result-image panel-frame">
                 <canvas id="result-image" width="0" height="0"></canvas>
             </div>
         </section>
@@ -97,6 +109,10 @@
     </div>
 
 </main>
+
+<footer class="footer">
+
+</footer>
 
 <script type="module" src="/src/ts/braille.ts"></script>
 

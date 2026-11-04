@@ -1,0 +1,228 @@
+:root {
+    --control-face       : #b8b8b8;
+    --control-highlight  : #f0f0f0;
+    --control-shadow     : #505050;
+    --control-ink        : #000000;
+    --control-field      : var(--color-background);
+    --control-field-text : var(--color-text);
+    --control-track      : #404040;
+}
+
+.control-list {
+    --control-field      : #f0f0f0;
+    --control-field-text : var(--control-ink);
+
+    display              : flex;
+    flex-direction       : column;
+    gap                  : 8px;
+    min-inline-size      : 0;
+    margin               : 0;
+    padding              : 16px;
+    border               : 2px solid;
+    border-color         : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
+    border-radius        : 0;
+    background-color     : var(--control-face);
+    color                : var(--control-ink);
+}
+
+.control-list :focus-visible {
+    outline-color : var(--control-ink);
+}
+
+.control {
+    display               : grid;
+    grid-template-columns : 17ch minmax(0, 1fr) 6ch;
+    align-items           : center;
+    gap                   : 8px;
+}
+
+input {
+    min-inline-size : 0;
+    margin          : 0;
+    border-radius   : 0;
+}
+
+input:focus-visible,
+button:focus-visible {
+    outline        : 1px dotted var(--color-link);
+    outline-offset : 3px;
+}
+
+.control > .number-control {
+    grid-column : 2 / -1;
+}
+
+.number-control {
+    display               : grid;
+    grid-template-columns : minmax(0, 1fr) 22px;
+    gap                   : 4px;
+}
+
+input[type="number"],
+.control output {
+    border           : 2px solid;
+    border-color     : var(--control-shadow) var(--control-highlight) var(--control-highlight) var(--control-shadow);
+    background-color : var(--control-field);
+    color            : var(--control-field-text);
+}
+
+input[type="number"] {
+    inline-size : 100%;
+    padding     : 2px 6px;
+}
+
+.number-control input[type="number"] {
+    appearance : textfield;
+}
+
+.number-control input[type="number"]::-webkit-inner-spin-button,
+.number-control input[type="number"]::-webkit-outer-spin-button {
+    appearance : none;
+    margin     : 0;
+}
+
+input[type="number"]:invalid {
+    border-color : var(--color-red);
+}
+
+input[type="range"] {
+    appearance  : none;
+    inline-size : 100%;
+    block-size  : 24px;
+    background  : transparent;
+    cursor      : pointer;
+}
+
+/* Browser-specific slider parts must use separate rules. */
+input[type="range"]::-webkit-slider-runnable-track {
+    block-size : 6px;
+    border     : 0;
+    background : var(--control-track);
+}
+
+input[type="range"]::-moz-range-track {
+    block-size : 6px;
+    border     : 0;
+    background : var(--control-track);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance    : none;
+    inline-size   : 14px;
+    block-size    : 22px;
+    margin-top    : -8px;
+    border        : 2px solid;
+    border-color  : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
+    border-radius : 0;
+    background    : var(--control-face);
+}
+
+input[type="range"]::-moz-range-thumb {
+    inline-size   : 10px;
+    block-size    : 18px;
+    border        : 2px solid;
+    border-color  : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
+    border-radius : 0;
+    background    : var(--control-face);
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+    background : var(--control-highlight);
+}
+
+input[type="range"]:active::-moz-range-thumb {
+    background : var(--control-highlight);
+}
+
+input[type="checkbox"] {
+    appearance   : none;
+    display      : grid;
+    place-items  : center;
+    justify-self : start;
+    inline-size  : 20px;
+    block-size   : 20px;
+    border       : 2px solid;
+    border-color : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
+    background   : var(--control-face);
+    color        : var(--control-ink);
+    cursor       : pointer;
+}
+
+input[type="checkbox"]:checked,
+input[type="checkbox"]:active {
+    border-color : var(--control-shadow) var(--control-highlight) var(--control-highlight) var(--control-shadow);
+}
+
+input[type="checkbox"]:checked::before {
+    content     : "×";
+    font-weight : 700;
+    line-height : 1;
+}
+
+.control output {
+    padding    : 0 4px;
+    text-align : end;
+}
+
+button,
+input::file-selector-button {
+    padding          : 4px 8px;
+    border           : 2px solid;
+    border-color     : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
+    border-radius    : 0;
+    background-color : var(--control-face);
+    color            : var(--control-ink);
+    cursor           : pointer;
+}
+
+.number-stepper {
+    display            : grid;
+    grid-template-rows : repeat(2, 1fr);
+}
+
+.number-step {
+    display        : grid;
+    place-items    : center;
+    min-block-size : 0;
+    padding        : 0;
+    touch-action   : none;
+    user-select    : none;
+}
+
+.number-step::before {
+    content       : "";
+    border-inline : 4px solid transparent;
+    border-bottom : 4px solid var(--control-ink);
+}
+
+.number-step[data-step="down"]::before {
+    border-top    : 4px solid var(--control-ink);
+    border-bottom : 0;
+}
+
+.control-list:disabled,
+input:disabled,
+button:disabled {
+    --control-highlight  : #d0d0d0;
+    --control-shadow     : #929292;
+    --control-ink        : #808080;
+    --control-field      : var(--control-face);
+    --control-field-text : var(--control-ink);
+    --control-track      : var(--control-shadow);
+
+    color                : var(--control-ink);
+    cursor               : default;
+}
+
+button:not(:disabled):active,
+input::file-selector-button:active {
+    border-color : var(--control-shadow) var(--control-highlight) var(--control-highlight) var(--control-shadow);
+}
+
+input[type="file"] {
+    display : block;
+}
+
+input::file-selector-button {
+    margin-inline-end : 12px;
+}

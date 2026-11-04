@@ -1,6 +1,7 @@
 @import "./reset.css";
 @import "./colors.css";
 @import "./typography.css";
+@import "./controls.css";
 
 :root {
     --min-inline-size   : 880px;
@@ -14,6 +15,17 @@ body {
     background-color : var(--color-background);
     color            : var(--color-text);
     padding          : var(--main-body-padding);
+}
+
+main {
+    max-inline-size : calc(var(--min-inline-size) - var(--main-body-padding) * 2);
+    margin-inline   : auto;
+}
+
+.panel-frame {
+    min-inline-size : 0;
+    padding         : 12px;
+    border          : 1px solid #404040;
 }
 
 /*.main-title::before {*/
@@ -51,23 +63,6 @@ a:visited {
 .emphasize {
     font-weight : 700;
     color       : var(--color-text-emphasize);
-}
-
-input[type="file"] {
-    display : block;
-}
-
-input::file-selector-button {
-    margin-inline-end : 12px;
-    padding           : 4px 8px;
-    border            : none;
-    border-radius     : 0;
-    cursor            : pointer;
-    background-color  : var(--color-text);
-}
-
-input::file-selector-button:hover {
-    background-color : white;
 }
 
 .pixel-art {

@@ -53,3 +53,23 @@ h2 {
     font-size   : 1.6rem;
     font-weight : 400;
 }
+
+fieldset,
+.control,
+label,
+legend,
+button,
+input,
+select,
+textarea,
+output,
+input::file-selector-button {
+    font-family : "IBM VGA 8x16", "Fira Mono", monospace;
+    font-size   : 1.6rem;
+    font-weight : 400;
+}
+
+button,
+input::file-selector-button {
+    line-height : 1.0;
+}
