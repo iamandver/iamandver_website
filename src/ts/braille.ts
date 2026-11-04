@@ -46,7 +46,7 @@ function setupImageUploading(): void
                 canvas.height = bitmap.height;
 
                 ctx.drawImage(bitmap, 0, 0);
-                const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                // const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
             } finally
             {
