@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-                                base: "/iamandver_website/"
+                                base : "/iamandver_website/",
+                                input: ["index.html", "braille.html"]
                             });

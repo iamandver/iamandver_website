@@ -23,6 +23,14 @@ A personal corner of the web: old-school, handmade, playful, and deliberately a 
 - **Hidden arcade:** start with one game and one satisfying discovery path.
 - **Personal directory:** favourite obscure websites, tools, art, and games, with brief annotations.
 
+## First workbench project
+
+The image-to-Braille converter from the C# `a_weird_day` project. Plan to port its conversion logic to TypeScript so visitors can try it in their browser.
+
+Colour output always uses a selected colour palette. The initial palette collection and any custom-palette controls are still open. Cascadia Mono is the starting font candidate for Braille output.
+
+Proposed first milestone: render a bundled sample image as Braille and compare it with the C# output. Then add local image selection, conversion controls, and text copying. Feature it on the homepage with a preview and a link to its own tool page.
+
 ## Still open
 
 Exact dimensions, panel contents, artwork, terminal appearance, commands, and the first game. A draggable terminal is an option to explore; a full window-based desktop is not part of the starting layout.

@@ -1,0 +1,8 @@
+/*body {*/
+/*    background-color : blue;*/
+/*}*/
+
+.source-image {
+    max-width : 640px;
+    border    : 2px solid grey;
+}

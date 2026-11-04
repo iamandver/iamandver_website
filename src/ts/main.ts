@@ -1,1 +1,2 @@
-import '../css/style.css'
+import "../css/common.css";
+import "../css/home.css";

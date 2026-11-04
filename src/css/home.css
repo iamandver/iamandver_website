@@ -1,0 +1,20 @@
+main {
+    display               : grid;
+    grid-template-columns : 160px minmax(0, 1fr) 180px;
+    gap                   : 16px;
+
+    margin-inline         : auto;
+    max-inline-size       : calc(var(--min-inline-size) - var(--main-body-padding) * 2);
+}
+
+main > * {
+    border  : 1px solid #404040;
+    /*border-left : 4px solid lightgrey;*/
+    /*border-top  : 4px solid lightgrey;*/
+    padding : 12px;
+}
+
+main > header,
+main > footer {
+    grid-column : 1 / -1;
+}
