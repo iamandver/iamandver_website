@@ -3,41 +3,36 @@
 @import "./typography.css";
 
 :root {
+    --min-inline-size   : 880px;
+    --main-body-padding : 16px;
     /* One source-art pixel occupies two CSS pixels. */
-    --art-pixel : 2px;
-}
-
-.pixel-art {
-    max-width : none;
-    height    : auto;
-}
-
-.pixel-tile {
-    background-repeat   : repeat;
-    background-position : 0 0;
-}
-
-/* Example pixel image source: 32×24 pixels. */
-.pixel-art-example {
-    width : calc(32 * var(--art-pixel));
-}
-
-/* Example pixel tile source: 16×16 pixels. */
-.pixel-tile-example {
-    background-image : url("../assets/img/example");
-    background-size  : calc(16 * var(--art-pixel)) calc(16 * var(--art-pixel));
+    --art-pixel         : 2px;
 }
 
 body {
-    min-inline-size  : 880px;
+    min-inline-size  : var(--min-inline-size);
     background-color : var(--color-background);
     color            : var(--color-text);
-    padding          : 16px;
+    padding          : var(--main-body-padding);
 }
 
 main {
-    margin-inline   : auto;
-    max-inline-size : 72ch;
+    display               : grid;
+    grid-template-columns : 160px minmax(0, 1fr) 180px;
+    gap                   : 16px;
+
+    margin-inline         : auto;
+    max-inline-size       : calc(var(--min-inline-size) - var(--main-body-padding) * 2);
+}
+
+main > * {
+    border  : 1px solid #444444;
+    padding : 12px;
+}
+
+main > header,
+main > footer {
+    grid-column : 1 / -1;
 }
 
 /*.main-title::before {*/
@@ -70,4 +65,25 @@ a:visited {
     padding-block    : 0.4rem 0.2rem;
     color            : black;
     background-color : var(--color-link);
+}
+
+.pixel-art {
+    max-width : none;
+    height    : auto;
+}
+
+.pixel-tile {
+    background-repeat   : repeat;
+    background-position : 0 0;
+}
+
+/* Example pixel image source: 32×24 pixels. */
+.pixel-art-example {
+    width : calc(32 * var(--art-pixel));
+}
+
+/* Example pixel tile source: 16×16 pixels. */
+.pixel-tile-example {
+    background-image : url("../assets/img/example");
+    background-size  : calc(16 * var(--art-pixel)) calc(16 * var(--art-pixel));
 }
