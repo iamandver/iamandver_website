@@ -15,6 +15,7 @@
     --color-background     : #000000;
     --color-text           : #d0d0d0;
     --color-text-emphasize : #ece8e4;
+    --color-text-dark      : #808080;
     --color-accent         : #f4be68;
     --color-link           : var(--color-blue);
     --color-link-visited   : #b996e3;

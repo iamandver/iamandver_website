@@ -1,4 +1,9 @@
-label[for="image-file"] {
+main {
+    max-inline-size : calc(var(--min-inline-size) - var(--main-body-padding) * 2);
+    margin-inline   : auto;
+}
+
+label[for="image-upload-button"] {
     display            : block;
     margin-block-start : 16px;
 }
@@ -7,34 +12,66 @@ label[for="image-file"] {
     margin-block : 8px 16px;
 }
 
-.image-file::file-selector-button {
-    /*background-color : var(--color-background);*/
-    /*color            : var(--color-link);*/
+.image-status {
+    color     : var(--color-text-dark);
+    font-size : 16px;
 }
-
-.image-file::file-selector-button:hover {
-    /*border-color     : var(--color-link);*/
-    /*background-color : var(--color-link);*/
-    /*color            : var(--color-background);*/
-}
-
-/*#image-file:focus-visible {*/
-/*    outline        : 1px dashed var(--color-accent);*/
-/*    outline-offset : 4px;*/
-/*}*/
 
 .braille-converter-ui-root {
-    display               : grid;
-    grid-template-columns : 1fr 1fr;
-    gap                   : 16px;
+    display : grid;
+    gap     : 24px;
 }
 
-.source-image {
-    max-width : 640px;
-    border    : 2px solid grey;
+.preview-panel {
+    min-inline-size : 0;
 }
 
-.result-image {
-    max-width : 640px;
-    border    : 2px solid grey;
+.preview-panel > h2,
+.result-heading {
+    margin-block-end : 8px;
+}
+
+.result-heading {
+    display         : flex;
+    gap             : 12px;
+    justify-content : space-between;
+    align-items     : center;
+}
+
+.heading-left {
+    display     : flex;
+    align-items : center;
+    gap         : 12px;
+}
+
+.copy-braille {
+    padding          : 4px 8px;
+    border           : 1px solid #404040;
+    border-radius    : 0;
+    background-color : var(--color-background);
+    color            : var(--color-link);
+    cursor           : pointer;
+}
+
+.copy-braille:disabled {
+    opacity : 0.5;
+    cursor  : default;
+}
+
+.copy-braille:not(:disabled):hover {
+    border-color : var(--color-blue);
+}
+
+.preview-frame {
+    min-inline-size : 0;
+    padding         : 12px;
+    border          : 1px solid #404040;
+}
+
+#source-image,
+#result-image {
+    display         : block;
+    max-inline-size : 100%;
+    block-size      : auto;
+    margin-inline   : auto;
 }

@@ -25,11 +25,13 @@ A personal corner of the web: old-school, handmade, playful, and deliberately a 
 
 ## First workbench project
 
-The image-to-Braille converter from the C# `a_weird_day` project. Plan to port its conversion logic to TypeScript so visitors can try it in their browser.
+The image-to-Braille converter from the C# `a_weird_day` project, ported to TypeScript so visitors can try it in their browser.
 
-Colour output always uses a selected colour palette. The initial palette collection and any custom-palette controls are still open. Cascadia Mono is the starting font candidate for Braille output.
+Colour output always uses a selected colour palette. The initial palette collection and any custom-palette controls are still open.
 
-Proposed first milestone: render a bundled sample image as Braille and compare it with the C# output. Then add local image selection, conversion controls, and text copying. Feature it on the homepage with a preview and a link to its own tool page.
+Display the source and result vertically on a scrollable page. Keep the main area's width consistent with the homepage. The result fills that area and draws an evenly spaced dot grid on Canvas; its height follows the image proportions. Keep Unicode Braille text available for copying.
+
+Next: live conversion controls for a loaded image. Feature the converter on the homepage with a preview and a link to its own tool page.
 
 ## Still open
 

@@ -11,26 +11,45 @@
 
 <main>
 
-    <h1>Braille Converter.</h1>
-    <p>This is a little experiment I have been working on recently. I really love ASCII art and was wondering if I could push it far enough
-        to be used as game graphics. Then I discovered Braille characters, which is a great way to represent a 2 by 4 pixel cluster. So I wrote
-        a little image converter that takes any image and uses Braille characters to represent it as best as possible. I have not started
-        working on a game yet that might use this as graphics, but the image generation itself is pretty cool. There are a few
-        parameters for you to play around with too. <span class="emphasize">Have fun!</span>
-    </p>
+    <header>
 
-    <label for="image-file">Open an image:</label>
-    <input id="image-file" class="image-file" type="file" accept="image/*">
+        <h1>Braille Converter.</h1>
+        <p class="converter-intro">This is a little experiment I have been working on recently. I really love ASCII art and was wondering if I
+            could push it far enough to be used as game graphics. Then I discovered Braille characters, which is a great way to represent a 2 by
+            4 pixel cluster. So I wrote a little image converter that takes any image and uses Braille characters to represent it as best as
+            possible. I have not started working on a game yet that might use this as graphics, but the image generation itself is pretty cool.
+            There are a few parameters for you to play around with too. <span class="emphasize">Have fun!</span>
+        </p>
+
+        <label for="image-upload-button">Open an image:</label>
+        <input id="image-upload-button" class="image-file" type="file" accept="image/*">
+
+    </header>
 
     <div class="braille-converter-ui-root">
 
-        <div class="source-image">
-            <canvas id="source-image"></canvas>
-        </div>
+        <section class="preview-panel">
+            <h2>Source image</h2>
+            <div class="source-image preview-frame">
+                <canvas id="source-image"></canvas>
+            </div>
+        </section>
 
-        <pre id="result-image" class="result-image"></pre>
+        <section class="preview-panel">
+            <div class="result-heading">
+                <div class="heading-left">
+                    <h2>Braille</h2>
+                    <button id="copy-braille" class="copy-braille" type="button" disabled>Copy Braille</button>
+                    <span id="copy-status"></span>
+                </div>
+                <div id="image-status" class="image-status"></div>
+            </div>
+            <div id="result-preview" class="result-image preview-frame">
+                <canvas id="result-image" width="0" height="0"></canvas>
+            </div>
+        </section>
+
     </div>
-
 
 </main>
 
