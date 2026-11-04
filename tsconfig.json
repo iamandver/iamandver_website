@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    /* Browser code with ES2023 APIs and Vite client types */
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "types": ["vite/client"],
+    "allowJs": false,
+
+    /* ES modules and asset imports handled by Vite */
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "allowImportingTsExtensions": true,
+    "allowArbitraryExtensions": true,
+    "noUncheckedSideEffectImports": true,
+    "noEmit": true,
+
+    /* Type and control-flow checks */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"]
+}

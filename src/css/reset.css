@@ -1,0 +1,57 @@
+/* Include padding and borders in element dimensions. */
+*,
+*::before,
+*::after {
+    box-sizing : border-box;
+}
+
+html {
+    image-rendering : pixelated;
+}
+
+/* Remove common default margins while keeping list spacing. */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+    margin : 0;
+}
+
+body {
+    min-height  : 100svh;
+    line-height : 1.6;
+}
+
+/* Keep ordinary media within its container; .pixel-art overrides this. */
+img,
+picture,
+video,
+canvas,
+svg {
+    max-width : 100%;
+}
+
+img,
+video {
+    height : auto;
+}
+
+/* Inherit text styling while keeping native form controls. */
+button,
+input,
+select,
+textarea {
+    font : inherit;
+}
+
+table {
+    border-collapse : collapse;
+}

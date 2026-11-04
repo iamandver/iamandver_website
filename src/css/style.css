@@ -1,0 +1,73 @@
+@import "./reset.css";
+@import "./colors.css";
+@import "./typography.css";
+
+:root {
+    /* One source-art pixel occupies two CSS pixels. */
+    --art-pixel : 2px;
+}
+
+.pixel-art {
+    max-width : none;
+    height    : auto;
+}
+
+.pixel-tile {
+    background-repeat   : repeat;
+    background-position : 0 0;
+}
+
+/* Example pixel image source: 32×24 pixels. */
+.pixel-art-example {
+    width : calc(32 * var(--art-pixel));
+}
+
+/* Example pixel tile source: 16×16 pixels. */
+.pixel-tile-example {
+    background-image : url("../assets/img/example");
+    background-size  : calc(16 * var(--art-pixel)) calc(16 * var(--art-pixel));
+}
+
+body {
+    min-inline-size  : 880px;
+    background-color : var(--color-background);
+    color            : var(--color-text);
+    padding          : 16px;
+}
+
+main {
+    margin-inline   : auto;
+    max-inline-size : 72ch;
+}
+
+/*.main-title::before {*/
+/*    content : ">> ";*/
+
+/*}*/
+
+/*.main-title {*/
+/*    hanging-punctuation : first last;*/
+/*}*/
+
+p {
+    margin-top : 1.2rem;
+}
+
+a:link {
+    color : var(--color-link);
+}
+
+a:visited {
+    color : var(--color-link-visited);
+}
+
+.accent {
+    color : var(--color-accent);
+}
+
+.highlight {
+    padding-inline   : 0.6rem 0.4rem;
+    padding-block    : 0.4rem 0.2rem;
+    color            : black;
+    background-color : var(--color-link);
+}
