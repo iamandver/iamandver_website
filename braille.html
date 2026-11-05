@@ -34,15 +34,15 @@
         <section class="preview-panel">
 
             <div class="source-image-container">
-                <h2>Source image</h2>
                 <div class="source-image panel-frame">
+                    <h3 class="panel-title">Source image</h3>
                     <canvas id="source-image"></canvas>
                 </div>
             </div>
 
             <div id="braille-controls" class="braille-controls">
-                <h2>Settings</h2>
                 <fieldset id="conversion-settings" class="control-list" disabled>
+                    <h2>Settings</h2>
                     <div class="control">
                         <label for="max-columns">Max columns</label>
                         <div class="number-control">
@@ -95,13 +95,14 @@
         <section class="result-panel">
             <div class="result-heading">
                 <div class="heading-left">
-                    <h2>Braille</h2>
+                    <!--                    <h2>Braille</h2>-->
                     <button id="copy-braille" type="button" disabled>Copy Braille</button>
                     <span id="copy-status"></span>
                 </div>
                 <div id="image-status" class="image-status"></div>
             </div>
             <div id="result-preview" class="result-image panel-frame">
+                <h3 class="panel-title">Braille</h3>
                 <canvas id="result-image" width="0" height="0"></canvas>
             </div>
         </section>

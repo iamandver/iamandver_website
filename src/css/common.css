@@ -23,9 +23,25 @@ main {
 }
 
 .panel-frame {
+    position        : relative;
     min-inline-size : 0;
-    padding         : 12px;
-    border          : 1px solid #404040;
+    padding         : 16px;
+    background      : var(--panel-background);
+    color           : var(--color-text);
+    border          : 3px double var(--panel-border);
+}
+
+/* The panel background masks the top border behind its title. */
+.panel-frame > .panel-title {
+    position           : absolute;
+    inset-block-start  : 0;
+    inset-inline-start : 8px;
+    max-inline-size    : calc(100% - 16px);
+    margin             : 0;
+    padding-inline     : 8px;
+    background         : var(--panel-background);
+    color              : var(--color-heading);
+    transform          : translateY(-50%);
 }
 
 /*.main-title::before {*/
@@ -43,6 +59,11 @@ p {
 
 a:link {
     color : var(--color-link);
+}
+
+a:hover,
+a:visited:hover {
+    color : var(--color-link-hover);
 }
 
 a:visited {
@@ -84,4 +105,9 @@ a:visited {
 .pixel-tile-example {
     background-image : url("../assets/img/example");
     background-size  : calc(16 * var(--art-pixel)) calc(16 * var(--art-pixel));
+}
+
+*::selection {
+    color            : var(--color-text-selected);
+    background-color : var(--color-text-selected-bg);
 }

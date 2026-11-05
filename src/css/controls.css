@@ -68,7 +68,7 @@ input[type="number"],
 
 input[type="number"] {
     inline-size : 100%;
-    padding     : 2px 6px;
+    padding     : 4px 6px;
 }
 
 .number-control input[type="number"] {
@@ -82,7 +82,8 @@ input[type="number"] {
 }
 
 input[type="number"]:invalid {
-    border-color : var(--color-red);
+    color : var(--color-dos-red);
+    /*border-color : var(--color-dos-red);*/
 }
 
 input[type="range"] {
@@ -160,7 +161,7 @@ input[type="checkbox"]:checked::before {
 }
 
 .control output {
-    padding    : 0 4px;
+    padding    : 4px 4px;
     text-align : end;
 }
 

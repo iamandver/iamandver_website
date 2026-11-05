@@ -32,26 +32,49 @@
     font-display : swap;
 }
 
+@font-face {
+    font-family  : "ToshibaSat 9x16";
+    src          : url("../assets/fonts/oldschool_pc_font_pack_v2.2_web/woff - Web (webfonts)/WebPlus_ToshibaSat_9x16.woff");
+    font-style   : normal;
+    font-weight  : 400;
+    font-display : swap;
+}
+
 html {
     font-size : 62.5%;
 }
 
 body {
-    font-family : "Fira Mono", monospace;
+    font-family : "ToshibaSat 9x16", "Fira Mono", monospace;
     font-size   : 1.6rem;
+    line-height : 1.0;
 }
 
 h1 {
-    font-family : "IBM VGA 8x16", "Fira Mono", monospace;
+    font-family : "ToshibaSat 9x16", "Fira Mono", monospace;
     font-size   : 3.2rem;
     font-weight : 400;
     line-height : 1.0;
 }
 
 h2 {
-    font-family : "IBM VGA 8x16", "Fira Mono", monospace;
+    font-family : "ToshibaSat 9x16", "Fira Mono", monospace;
     font-size   : 1.6rem;
     font-weight : 400;
+    line-height : 1.0;
+
+}
+
+h3 {
+    font-family : "ToshibaSat 9x16", "Fira Mono", monospace;
+    font-size   : 1.6rem;
+    font-weight : 400;
+    line-height : 1.0;
+    color       : var(--color-heading);
+}
+
+p {
+    line-height : 1.6;
 }
 
 fieldset,
@@ -64,11 +87,12 @@ select,
 textarea,
 output,
 input::file-selector-button {
-    font-family : "IBM VGA 8x16", "Fira Mono", monospace;
+    font-family : "ToshibaSat 9x16", "Fira Mono", monospace;
     font-size   : 1.6rem;
     font-weight : 400;
 }
 
+a,
 button,
 input::file-selector-button {
     line-height : 1.0;

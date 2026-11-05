@@ -37,7 +37,11 @@ label[for="image-upload-button"] {
 .source-image-container > h2,
 .braille-controls > h2,
 .result-heading {
-    margin-block-end : 8px;
+    margin-block-end : 16px;
+}
+
+.control-list > h2 {
+    color : var(--color-dos-blue);
 }
 
 .result-panel {
@@ -46,7 +50,6 @@ label[for="image-upload-button"] {
 
 .result-heading {
     display         : flex;
-    gap             : 12px;
     justify-content : space-between;
     align-items     : center;
 }

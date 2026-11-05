@@ -1,22 +1,57 @@
 :root {
 
-    --color-red            : #e59481;
-    --color-orange         : #efc485;
-    --color-orange-2       : #f0d098;
-    --color-yellow         : #f2ec91;
-    --color-green          : #83e17f;
-    --color-cyan           : #7ed3d1;
-    --color-blue           : #80aaff;
-    --color-pink           : #f696c7;
-    --color-pink-2         : #ed94c0;
-    --color-purple         : #c7a2ff;
-    --color-purple-2       : #c191ff;
+    /* Proposed 12-bit palette (#RGB). Preview only; not applied to the site. */
+    --color-12bit-red          : #ee9988;
+    --color-12bit-orange       : #eecc88;
+    --color-12bit-yellow       : #eeee99;
+    --color-12bit-green        : #88dd88;
+    --color-12bit-cyan         : #88cccc;
+    --color-12bit-blue         : #88aaff;
+    --color-12bit-pink         : #ff99cc;
+    --color-12bit-purple       : #ccaaff;
 
-    --color-background     : #000000;
-    --color-text           : #d0d0d0;
-    --color-text-emphasize : #ece8e4;
-    --color-text-dark      : #808080;
-    --color-accent         : #f4be68;
-    --color-link           : var(--color-blue);
-    --color-link-visited   : #b996e3;
+    --color-12bit-accent       : #ffbb66;
+    --color-12bit-link         : #88aaff;
+    --color-12bit-link-visited : #cc99ee;
+
+    /* Classic DOS / default CGA-EGA 16-color palette, in hardware order.
+       Preview only; not applied to the site. All values also fit 12-bit RGB. */
+    --color-dos-black          : #000000;
+    --color-dos-blue           : #0000aa;
+    --color-dos-green          : #00aa00;
+    --color-dos-cyan           : #00aaaa;
+    --color-dos-red            : #aa0000;
+    --color-dos-magenta        : #aa00aa;
+    --color-dos-brown          : #aa5500;
+    --color-dos-grey           : #aaaaaa;
+
+    --color-dos-grey-dark      : #555555;
+    --color-dos-blue-bright    : #5555ff;
+    --color-dos-green-bright   : #55ff55;
+    --color-dos-cyan-bright    : #55ffff;
+    --color-dos-red-bright     : #ff5555;
+    --color-dos-magenta-bright : #ff55ff;
+    --color-dos-yellow-bright  : #ffff55;
+    --color-dos-white          : #ffffff;
+
+    /* some extra 12 bit grays mainly for text */
+    --color-12bit-grey-3       : #888888;
+    --color-12bit-grey-2       : #cccccc;
+    --color-12bit-grey-1       : #eeeeee;
+
+    /* use these colors in code ONLY so they have a layer of abstraction */
+    --color-background         : var(--color-dos-black);
+    --panel-background         : var(--color-dos-black);
+    --panel-border             : var(--color-dos-cyan);
+    --color-text-dark          : var(--color-dos-red);
+    --color-text               : var(--color-12bit-grey-2);
+    --color-text-emphasize     : var(--color-12bit-grey-1);
+    --color-text-selected      : var(--color-dos-black);
+    --color-text-selected-bg   : var(--color-dos-green);
+    --color-heading            : var(--color-dos-yellow-bright);
+    --color-accent             : var(--color-dos-yellow-bright);
+    --color-link               : var(--color-dos-cyan-bright);
+    --color-link-hover         : var(--color-dos-yellow-bright);
+    --color-link-visited       : var(--color-dos-magenta-bright);
+
 }
