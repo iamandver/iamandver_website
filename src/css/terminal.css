@@ -1,0 +1,156 @@
+:root {
+    --controls-bar-height : 32px;
+}
+
+body {
+    padding-block-end : var(--controls-bar-height);
+}
+
+.controls {
+    position         : fixed;
+    inset-inline     : 0;
+    inset-block-end  : 0;
+    z-index          : 10;
+    block-size       : var(--controls-bar-height);
+    background-color : var(--command-bar-background);
+    color            : var(--command-bar-text);
+}
+
+.controls-inner {
+    display         : flex;
+    align-items     : center;
+    gap             : 8px;
+    block-size      : 100%;
+    max-inline-size : calc(var(--min-inline-size) - var(--main-body-padding) * 2);
+    margin-inline   : auto;
+    padding-inline  : var(--main-body-padding);
+}
+
+.controls-command {
+    display          : inline-flex;
+    align-items      : center;
+    block-size       : 24px;
+    padding          : 4px 8px;
+    border           : 0;
+    background-color : transparent;
+    color            : inherit;
+    text-decoration  : none;
+    white-space      : nowrap;
+}
+
+.controls-command:hover,
+.controls-command:focus-visible,
+.controls-command[aria-expanded="true"] {
+    background-color : var(--command-bar-active-bg);
+    color            : var(--command-bar-active-text);
+}
+
+.controls-inner :focus-visible {
+    outline-color  : var(--command-bar-active-text);
+    outline-offset : -3px;
+}
+
+.terminal-hint {
+    margin-inline-start : auto;
+    white-space         : nowrap;
+}
+
+.terminal {
+    position           : absolute;
+    inset-inline-start : 50%;
+    inset-block-end    : calc(100% + 16px);
+    transform          : translateX(-50%);
+    display            : flex;
+    flex-direction     : column;
+    min-inline-size    : 0;
+    background         : var(--terminal-background);
+    color              : var(--terminal-text);
+    border             : 3px double var(--terminal-border);
+    inline-size        : calc(100% - var(--main-body-padding) * 2);
+    max-inline-size    : var(--min-inline-size);
+    block-size         : 360px;
+    max-block-size     : calc(100dvh - var(--controls-bar-height) - 40px);
+    box-shadow         : 8px 8px 0 var(--terminal-shadow);
+}
+
+.terminal-title {
+    position           : absolute;
+    inset-block-start  : 0;
+    inset-inline-start : 8px;
+    display            : flex;
+    align-items        : center;
+    block-size         : 24px;
+    max-inline-size    : calc(100% - 16px);
+    margin             : 0;
+    padding-inline     : 8px;
+    background         : var(--terminal-heading-bg);
+    color              : var(--terminal-heading);
+    transform          : translateY(-50%);
+}
+
+.terminal :focus-visible {
+    outline-color : var(--terminal-prompt);
+}
+
+.terminal[hidden] {
+    display : none;
+}
+
+.terminal-close {
+    position          : absolute;
+    inset-inline-end  : 8px;
+    inset-block-start : 0;
+    transform         : translateY(-50%);
+    block-size        : 24px;
+    border            : 0;
+    background        : var(--terminal-heading-bg);
+    color             : var(--terminal-heading);
+}
+
+.terminal-transcript {
+    flex            : 1;
+    min-block-size  : 0;
+    padding         : 16px;
+    overflow        : auto;
+    white-space     : pre-wrap;
+    overflow-wrap   : anywhere;
+    line-height     : 1.5;
+    scrollbar-color : var(--terminal-scrollbar) var(--terminal-background);
+}
+
+.terminal-transcript > div + div {
+    margin-block-start : 8px;
+}
+
+.terminal-command,
+.terminal-prompt {
+    color : var(--terminal-prompt);
+}
+
+.terminal-prompt {
+    display             : flex;
+    align-items         : center;
+    gap                 : 8px;
+    min-block-size      : 28px;
+    border-block-start  : 1px solid var(--terminal-border);
+    padding             : 8px 16px 16px;
+}
+
+#terminal-input {
+    flex        : 1;
+    inline-size : 0;
+    padding     : 0;
+    border      : 0;
+    outline     : none;
+    background  : transparent;
+    color       : inherit;
+    caret-color : var(--terminal-caret);
+    caret-shape : block;
+    line-height : 1.5;
+}
+
+@media (max-width : 400px) {
+    .terminal-hint {
+        display : none;
+    }
+}

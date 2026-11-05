@@ -17,12 +17,14 @@
     /* Classic DOS / default CGA-EGA 16-color palette, in hardware order.
        Preview only; not applied to the site. All values also fit 12-bit RGB. */
     --color-dos-black            : #000000;
+
     --color-dos-blue             : #0000aa;
     --color-dos-green            : #00aa00;
     --color-dos-cyan             : #00aaaa;
     --color-dos-red              : #aa0000;
     --color-dos-magenta          : #aa00aa;
     --color-dos-brown            : #aa5500;
+    --color-dos-yellow           : #aaaa00;
     --color-dos-grey             : #aaaaaa;
 
     --color-dos-grey-dark        : #555555;
@@ -42,18 +44,33 @@
     /* use these colors in code ONLY so they have a layer of abstraction */
     --color-background           : var(--color-dos-black);
     --panel-background           : var(--color-dos-black);
-    --panel-border               : var(--color-dos-cyan);
+    --panel-border               : var(--color-dos-brown);
     --color-text-dark            : var(--color-dos-red);
     --color-text                 : var(--color-dos-grey);
-    --color-text-emphasize       : var(--color-12bit-grey-1);
+    --color-text-bright          : var(--color-dos-white);
     --color-text-selected        : var(--color-dos-black);
     --color-text-selected-bg     : var(--color-dos-green);
     --color-highlight-text       : var(--color-dos-black);
     --color-heading              : var(--color-dos-yellow-bright);
-    --color-accent               : var(--color-dos-yellow-bright);
+    --color-accent               : var(--color-dos-blue-bright);
     --color-link                 : var(--color-dos-green);
     --color-link-hover           : var(--color-dos-green-bright);
     --color-link-visited         : var(--color-dos-green);
+
+    --command-bar-background     : var(--color-dos-cyan);
+    --command-bar-text           : var(--color-dos-black);
+    --command-bar-active-bg      : var(--color-dos-black);
+    --command-bar-active-text    : var(--color-dos-yellow-bright);
+
+    --terminal-background        : var(--color-dos-blue);
+    --terminal-border            : var(--color-dos-grey);
+    --terminal-text              : var(--color-dos-grey);
+    --terminal-heading           : var(--color-dos-black);
+    --terminal-heading-bg        : var(--color-dos-grey);
+    --terminal-prompt            : var(--color-dos-yellow-bright);
+    --terminal-shadow            : var(--color-dos-black);
+    --terminal-scrollbar         : var(--color-dos-grey);
+    --terminal-caret             : var(--color-dos-grey);
 
     /* Control colors */
     --control-face               : #b8b8b8;

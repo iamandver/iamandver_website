@@ -8,17 +8,17 @@
     --control-field      : var(--control-list-field);
     --control-field-text : var(--control-ink);
 
-    display          : flex;
-    flex-direction   : column;
-    gap              : 8px;
-    min-inline-size  : 0;
-    margin           : 0;
-    padding          : 16px;
-    border           : 2px solid;
-    border-color     : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
-    border-radius    : 0;
-    background-color : var(--control-face);
-    color            : var(--control-ink);
+    display              : flex;
+    flex-direction       : column;
+    gap                  : 8px;
+    min-inline-size      : 0;
+    margin               : 0;
+    padding              : 16px;
+    border               : 2px solid;
+    border-color         : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
+    border-radius        : 0;
+    background-color     : var(--control-face);
+    color                : var(--control-ink);
 }
 
 .control-list :focus-visible {
@@ -316,8 +316,8 @@ select:disabled + .select-arrow {
     --control-field-text : var(--control-ink);
     --control-track      : var(--control-shadow);
 
-    color  : var(--control-ink);
-    cursor : default;
+    color                : var(--control-ink);
+    cursor               : default;
 }
 
 button:not(:disabled):active,

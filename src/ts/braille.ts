@@ -1,5 +1,5 @@
 import "./common.ts";
-import "../css/braille.css";
+import { isTerminalOpen } from "./terminal.ts";
 
 import { type BrailleCell, BrailleConverter, type BrailleParams } from "./braille_converter.ts";
 import { getPreset, palettePresets }                              from "./braille_palettes.ts";
@@ -194,6 +194,11 @@ function init(): void
     {
         tab.addEventListener("keydown", event =>
         {
+            if (event.defaultPrevented || isTerminalOpen())
+            {
+                return;
+            }
+
             if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
             {
                 return;
