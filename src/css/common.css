@@ -70,6 +70,23 @@ a:visited {
     color : var(--color-link-visited);
 }
 
+.page-navigation {
+    margin-block : 16px;
+}
+
+.navigation-link:any-link {
+    display         : inline-block;
+    padding         : 4px 8px;
+    color           : var(--color-navigation);
+    text-decoration : none;
+}
+
+.navigation-link:any-link:hover,
+.navigation-link:any-link:focus-visible {
+    color            : var(--color-background);
+    background-color : var(--color-navigation);
+}
+
 .accent {
     color : var(--color-accent);
 }

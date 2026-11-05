@@ -52,6 +52,7 @@
     --color-accent             : var(--color-dos-yellow-bright);
     --color-link               : var(--color-dos-cyan-bright);
     --color-link-hover         : var(--color-dos-yellow-bright);
+    --color-navigation         : var(--color-dos-green);
     --color-link-visited       : var(--color-dos-magenta-bright);
 
 }
