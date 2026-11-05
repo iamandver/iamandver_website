@@ -1,3 +1,7 @@
+.converter-intro {
+    margin-block-end : 32px;
+}
+
 label[for="image-upload-button"] {
     display            : block;
     margin-block-start : 16px;

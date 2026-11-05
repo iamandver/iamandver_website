@@ -33,6 +33,7 @@ function init(): void
     let previewWidth                       = 0;
     let drawnPixelRatio                    = window.devicePixelRatio || 1;
     let dotFill                            = 0.6;
+    let cellSpacing                        = 0.32;
 
     const params: BrailleParams = {
         columns           : 128,
@@ -47,7 +48,7 @@ function init(): void
     const drawResult = () =>
     {
         drawnPixelRatio = window.devicePixelRatio || 1;
-        renderBraille(cells, resultImage, previewWidth, dotFill);
+        renderBraille(cells, resultImage, previewWidth, dotFill, cellSpacing);
     };
     const observer   = new ResizeObserver(entries =>
                                           {
@@ -141,6 +142,17 @@ function init(): void
         drawResult();
     });
 
+    const spacing      = document.querySelector<HTMLInputElement>("#cell-spacing")!;
+    const spacingValue = document.querySelector<HTMLOutputElement>("#cell-spacing-value")!;
+    spacing.value      = String(cellSpacing * 100);
+    spacingValue.value = `${spacing.value}%`;
+    spacing.addEventListener("input", () =>
+    {
+        cellSpacing        = spacing.valueAsNumber / 100;
+        spacingValue.value = `${spacing.value}%`;
+        drawResult();
+    });
+
     copyButton.addEventListener("click", async () =>
     {
         const text = cells.map(row => row.map(cell => String.fromCodePoint(0x2800 + cell.dotMask)).join("")).join("\n");
@@ -200,7 +212,11 @@ function init(): void
     });
 }
 
-function renderBraille(cells: BrailleCell[][], output: HTMLCanvasElement, width: number, dotFill: number): void
+function renderBraille(cells: BrailleCell[][],
+                       output: HTMLCanvasElement,
+                       width: number,
+                       dotFill: number,
+                       cellSpacing: number): void
 {
     const rows    = cells.length;
     const columns = cells[0]?.length ?? 0;
@@ -215,14 +231,19 @@ function renderBraille(cells: BrailleCell[][], output: HTMLCanvasElement, width:
         return;
     }
 
-    const spacing    = width / (columns * 2);
-    const height     = rows * 4 * spacing;
+    // The extra gap is measured in dot spacings and split equally around each cell.
+    const cellWidth  = 2 + cellSpacing;
+    const cellHeight = 4 + cellSpacing;
+    const padding    = cellSpacing / 2;
+    const spacing    = width / (columns * cellWidth);
+    const height     = rows * cellHeight * spacing;
     const pixelRatio = window.devicePixelRatio || 1;
 
     output.width        = Math.max(1, Math.round(width * pixelRatio));
     output.height       = Math.max(1, Math.round(height * pixelRatio));
     output.style.width  = `${width}px`;
     output.style.height = `${height}px`;
+
     ctx.setTransform(output.width / width, 0, 0, output.height / height, 0, 0);
     ctx.fillStyle = getComputedStyle(document.body).backgroundColor;
     ctx.fillRect(0, 0, width, height);
@@ -246,8 +267,8 @@ function renderBraille(cells: BrailleCell[][], output: HTMLCanvasElement, width:
                         continue;
                     }
 
-                    const x = (columnIndex * 2 + dotColumn + 0.5) * spacing;
-                    const y = (rowIndex * 4 + dotRow + 0.5) * spacing;
+                    const x = (columnIndex * cellWidth + padding + dotColumn + 0.5) * spacing;
+                    const y = (rowIndex * cellHeight + padding + dotRow + 0.5) * spacing;
                     ctx.beginPath();
                     ctx.arc(x, y, radius, 0, Math.PI * 2);
                     ctx.fill();

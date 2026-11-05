@@ -2,7 +2,7 @@
 
 - A personal, old-school website: static, minimal, playful, and full of Easter eggs. Preserve the handmade, pre-commercial-web spirit.
 - Inspirations: [Devin.LA](https://devin.la/), [Cameron's World](https://www.cameronsworld.net/), and [Android Arts](https://androidarts.com/).
-- Desktop-first. Preserve the retro composition on phones using the current 880px viewport and minimum layout width.
+- Desktop-first, with basic mobile support. Use the device-width viewport, let layouts shrink, and stack panels and control labels on narrow screens. Preserve the retro fonts, colors, borders, and desktop composition.
 - Keep pixel artwork at a consistent scale using the shared `--art-pixel` value and explicit per-asset dimensions.
 
 # Implementation preferences

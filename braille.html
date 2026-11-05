@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8"/>
-<!--    <meta name="viewport" content="width=880"/>-->
+    <!--    <meta name="viewport" content="width=880"/>-->
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>iamandver.com/braille</title>
 </head>
@@ -18,15 +18,13 @@
 
     <header>
 
-        <h1>Braille Converter.</h1>
+        <h1>Braille Converter</h1>
         <p class="converter-intro">This is a little experiment I have been working on recently. I really love ASCII art and was wondering if I
             could push it far enough to be used as game graphics. Then I discovered Braille characters, which is a great way to represent a 2 by
             4 pixel cluster. So I wrote a little image converter that takes any image and uses Braille characters to represent it as best as
-            possible. What's really cool is that each character gets only one color, so the resulting image has a lower color resolution sort of
-            speak, which makes for very interesting patterns.
-
-            I have not started working on a game yet that might use this as graphics, but the image generation itself is pretty cool.
-            There are a few parameters for you to play around with too. <span class="emphasize">Have fun!</span>
+            possible. What's really cool is that each character gets only one color, so the resulting image has a lower color resolution so to
+            speak, which makes for very interesting patterns. I have not started working on a game yet that might use this as graphics, but the
+            image generation itself is pretty cool. There are a few parameters for you to play around with too. <span class="emphasize">Have fun!</span>
         </p>
 
         <label for="image-upload-button">Open an image:</label>
@@ -91,6 +89,11 @@
                         <label for="font-weight">Font weight</label>
                         <input id="font-weight" type="range" min="10" max="100" step="1" value="60">
                         <output id="font-weight-value" for="font-weight">60%</output>
+                    </div>
+                    <div class="control">
+                        <label for="cell-spacing">Cell spacing</label>
+                        <input id="cell-spacing" type="range" min="0" max="100" step="1" value="0">
+                        <output id="cell-spacing-value" for="cell-spacing">0%</output>
                     </div>
                 </fieldset>
             </div>
