@@ -15,12 +15,25 @@ body {
     min-inline-size  : 0;
     background-color : var(--color-background);
     color            : var(--color-text);
-    padding          : var(--main-body-padding);
 }
 
 main {
+    padding         : var(--main-body-padding);
     max-inline-size : calc(var(--min-inline-size) - var(--main-body-padding) * 2);
     margin-inline   : auto;
+}
+
+:focus-visible {
+    outline        : 1px dotted var(--color-link);
+    outline-offset : 3px;
+}
+
+.controls {
+    position         : fixed;
+    bottom           : 0;
+    height           : 64px;
+    width            : 100%;
+    background-color : var(--color-dos-grey);
 }
 
 .panel-frame {
@@ -58,34 +71,55 @@ p {
     margin-top : 1.2rem;
 }
 
-a:link {
-    color : var(--color-link);
+ul {
+    --padding-left       : 16px;
+
+    margin-block         : 24px;
+    padding-inline-start : var(--padding-left);
+
+    li {
+        list-style-type : none;
+        position        : relative;
+        margin-block    : 8px;
+    }
+
+    li:before {
+        content  : "*";
+        position : absolute;
+        left     : calc(var(--padding-left) * -1);
+    }
 }
 
-a:hover,
-a:visited:hover {
-    color : var(--color-link-hover);
+a:any-link {
+    color           : var(--color-link);
+    text-decoration : underline;
 }
 
 a:visited {
     color : var(--color-link-visited);
 }
 
-.page-navigation {
-    margin-block : 16px;
+a:any-link:hover,
+a:any-link:focus-visible {
+    color : var(--color-link-hover);
 }
 
 .navigation-link:any-link {
     display         : inline-block;
+    max-inline-size : 100%;
     padding         : 4px 8px;
-    color           : var(--color-navigation);
+    color           : var(--color-link);
     text-decoration : none;
 }
 
 .navigation-link:any-link:hover,
 .navigation-link:any-link:focus-visible {
-    color            : var(--color-background);
-    background-color : var(--color-navigation);
+    color            : var(--color-highlight-text);
+    background-color : var(--color-link);
+}
+
+.page-navigation {
+    margin-block : 16px;
 }
 
 .accent {
@@ -95,7 +129,7 @@ a:visited {
 .highlight {
     padding-inline   : 0.6rem 0.4rem;
     padding-block    : 0.4rem 0.2rem;
-    color            : black;
+    color            : var(--color-highlight-text);
     background-color : var(--color-link);
 }
 

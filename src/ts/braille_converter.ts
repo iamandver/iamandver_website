@@ -6,6 +6,8 @@ export type BrailleParams = {
     gamma: number;
     greyscale: boolean;
     normalizeGreyscale: boolean;
+    paletteSaturation: number;
+    paletteBrightness: number;
     palette?: readonly RGBColor[];
 };
 
@@ -139,7 +141,7 @@ export class BrailleConverter
                                                           const representative = this.SelectMedoid(dotColors);
                                                           const color          = params.greyscale
                                                                                  ? representative
-                                                                                 : this.SelectPaletteColor(representative, params.palette!);
+                                                                                 : this.SelectPaletteColor(this.AdjustPaletteColor(representative, params), params.palette!);
 
                                                           return { dotMask: mask, color };
                                                       }));
@@ -218,6 +220,26 @@ export class BrailleConverter
 
         // Equal distance and frequency keep the first pixel in row order.
         return bestColor;
+    }
+
+    private AdjustPaletteColor(color: RGBColor, params: BrailleParams): RGBColor
+    {
+        const maximum = Math.max(color.r, color.g, color.b);
+        if (maximum === 0)
+        {
+            return color;
+        }
+
+        // Scale HSV saturation and brightness while preserving hue.
+        const chroma     = maximum - Math.min(color.r, color.g, color.b);
+        const saturation = chroma === 0 ? 0 : Math.min(params.paletteSaturation, maximum / chroma);
+        const brightness = Math.min(255, maximum * params.paletteBrightness) / maximum;
+
+        return {
+            r: Math.round((maximum - (maximum - color.r) * saturation) * brightness),
+            g: Math.round((maximum - (maximum - color.g) * saturation) * brightness),
+            b: Math.round((maximum - (maximum - color.b) * saturation) * brightness)
+        };
     }
 
     private SelectPaletteColor(color: RGBColor, palette: readonly RGBColor[]): RGBColor
@@ -300,6 +322,12 @@ export class BrailleConverter
 
         if (!params.greyscale)
         {
+            if (!Number.isFinite(params.paletteSaturation) || params.paletteSaturation < 0
+                || !Number.isFinite(params.paletteBrightness) || params.paletteBrightness < 0)
+            {
+                throw new RangeError("Palette saturation and brightness must be finite and non-negative.");
+            }
+
             if (!params.palette?.length)
             {
                 throw new RangeError("Colour mode requires a non-empty palette.");

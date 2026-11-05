@@ -1,28 +1,24 @@
 :root {
-    --control-face       : #b8b8b8;
-    --control-highlight  : #f0f0f0;
-    --control-shadow     : #505050;
-    --control-ink        : #000000;
-    --control-field      : var(--color-background);
-    --control-field-text : var(--color-text);
-    --control-track      : #404040;
+    --control-height       : 28px;
+    --control-button-width : 22px;
+    --control-button-gap   : 4px;
 }
 
 .control-list {
-    --control-field      : #f0f0f0;
+    --control-field      : var(--control-list-field);
     --control-field-text : var(--control-ink);
 
-    display              : flex;
-    flex-direction       : column;
-    gap                  : 8px;
-    min-inline-size      : 0;
-    margin               : 0;
-    padding              : 16px;
-    border               : 2px solid;
-    border-color         : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
-    border-radius        : 0;
-    background-color     : var(--control-face);
-    color                : var(--control-ink);
+    display          : flex;
+    flex-direction   : column;
+    gap              : 8px;
+    min-inline-size  : 0;
+    margin           : 0;
+    padding          : 16px;
+    border           : 2px solid;
+    border-color     : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
+    border-radius    : 0;
+    background-color : var(--control-face);
+    color            : var(--control-ink);
 }
 
 .control-list :focus-visible {
@@ -33,29 +29,38 @@
     display               : grid;
     grid-template-columns : 17ch minmax(0, 1fr) 6ch;
     align-items           : center;
+    min-block-size        : var(--control-height);
     gap                   : 8px;
 }
 
-input {
+input,
+select {
     min-inline-size : 0;
     margin          : 0;
     border-radius   : 0;
 }
 
-input:focus-visible,
-button:focus-visible {
-    outline        : 1px dotted var(--color-link);
-    outline-offset : 3px;
+input[type="number"],
+input[type="range"],
+input[type="checkbox"],
+select,
+button,
+.control output,
+input::file-selector-button {
+    block-size  : var(--control-height);
+    line-height : 1;
 }
 
-.control > .number-control {
+.control > .number-control,
+.control > .select-control {
     grid-column : 2 / -1;
 }
 
-.number-control {
+.number-control,
+.select-control {
     display               : grid;
-    grid-template-columns : minmax(0, 1fr) 22px;
-    gap                   : 4px;
+    grid-template-columns : minmax(0, 1fr) var(--control-button-width);
+    gap                   : var(--control-button-gap);
 }
 
 input[type="number"],
@@ -83,13 +88,11 @@ input[type="number"] {
 
 input[type="number"]:invalid {
     color : var(--color-dos-red);
-    /*border-color : var(--color-dos-red);*/
 }
 
 input[type="range"] {
     appearance  : none;
     inline-size : 100%;
-    block-size  : 24px;
     background  : transparent;
     cursor      : pointer;
 }
@@ -140,8 +143,7 @@ input[type="checkbox"] {
     display      : grid;
     place-items  : center;
     justify-self : start;
-    inline-size  : 20px;
-    block-size   : 20px;
+    inline-size  : var(--control-height);
     border       : 2px solid;
     border-color : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
     background   : var(--control-face);
@@ -156,7 +158,6 @@ input[type="checkbox"]:active {
 
 input[type="checkbox"]:checked::before {
     content     : "×";
-    font-weight : 700;
     line-height : 1;
 }
 
@@ -185,6 +186,7 @@ input::file-selector-button {
     display        : grid;
     place-items    : center;
     min-block-size : 0;
+    block-size     : auto;
     padding        : 0;
     touch-action   : none;
     user-select    : none;
@@ -201,18 +203,121 @@ input::file-selector-button {
     border-bottom : 0;
 }
 
+.select-control {
+    position        : relative;
+    min-inline-size : 0;
+}
+
+.select-control::before {
+    content          : "";
+    grid-area        : 1 / 1;
+    border           : 2px solid;
+    border-color     : var(--control-shadow) var(--control-highlight) var(--control-highlight) var(--control-shadow);
+    background-color : var(--control-field);
+    pointer-events   : none;
+}
+
+/* Span both columns so the native select also opens when its arrow is clicked. */
+.select-control > select {
+    position    : relative;
+    grid-area   : 1 / 1 / 2 / -1;
+    appearance  : none;
+    inline-size : 100%;
+    padding     : 6px calc(var(--control-button-width) + var(--control-button-gap) + 8px) 6px 8px;
+    border      : 0;
+    background  : transparent;
+    color       : var(--control-field-text);
+    cursor      : pointer;
+}
+
+/* The select owns the click target; its arrow is a separate raised face. */
+.select-arrow {
+    position         : absolute;
+    inset-block      : 0;
+    inset-inline-end : 0;
+    display          : grid;
+    place-items      : center;
+    inline-size      : var(--control-button-width);
+    border           : 2px solid;
+    border-color     : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
+    background       : var(--control-face);
+    color            : var(--control-ink);
+    pointer-events   : none;
+}
+
+.select-arrow::before {
+    content       : "";
+    border-inline : 4px solid transparent;
+    border-top    : 4px solid currentColor;
+}
+
+.select-control > select:active + .select-arrow {
+    border-color : var(--control-shadow) var(--control-highlight) var(--control-highlight) var(--control-shadow);
+}
+
+/* Keep the native picker as a fallback where its contents cannot be styled. */
+@supports (appearance: base-select) {
+    .select-control > select,
+    .select-control > select::picker(select) {
+        appearance : base-select;
+    }
+
+    .select-control > select::picker-icon {
+        display : none;
+    }
+
+    .select-control > select::picker(select) {
+        padding       : 2px;
+        border        : 2px solid;
+        border-color  : var(--control-highlight) var(--control-shadow) var(--control-shadow) var(--control-highlight);
+        border-radius : 0;
+        background    : var(--control-face);
+        color         : var(--control-ink);
+        font          : inherit;
+        box-shadow    : 4px 4px 0 var(--control-shadow);
+    }
+
+    .select-control option {
+        min-block-size : var(--control-height);
+        padding        : 4px 8px;
+        border-radius  : 0;
+    }
+
+    .select-control option::checkmark {
+        display : none;
+    }
+
+    .select-control option:checked,
+    .select-control option:hover,
+    .select-control option:focus-visible {
+        background : var(--control-ink);
+        color      : var(--control-face);
+    }
+
+    .select-control option:focus-visible {
+        outline-color  : var(--control-face);
+        outline-offset : -3px;
+    }
+
+    .select-control > select:open + .select-arrow {
+        border-color : var(--control-shadow) var(--control-highlight) var(--control-highlight) var(--control-shadow);
+    }
+}
+
 .control-list:disabled,
 input:disabled,
-button:disabled {
-    --control-highlight  : #d0d0d0;
-    --control-shadow     : #929292;
-    --control-ink        : #808080;
+button:disabled,
+select:disabled,
+select:disabled + .select-arrow {
+    --control-highlight  : var(--control-disabled-highlight);
+    --control-shadow     : var(--control-disabled-shadow);
+    --control-ink        : var(--control-disabled-ink);
     --control-field      : var(--control-face);
     --control-field-text : var(--control-ink);
     --control-track      : var(--control-shadow);
 
-    color                : var(--control-ink);
-    cursor               : default;
+    color  : var(--control-ink);
+    cursor : default;
 }
 
 button:not(:disabled):active,
@@ -226,4 +331,16 @@ input[type="file"] {
 
 input::file-selector-button {
     margin-inline-end : 12px;
+}
+
+@media (max-width : 480px) {
+    .control {
+        grid-template-columns : minmax(0, 1fr) 6ch;
+    }
+
+    .control > label,
+    .control > .number-control,
+    .control > .select-control {
+        grid-column : 1 / -1;
+    }
 }

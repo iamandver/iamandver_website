@@ -2,6 +2,7 @@ import "./common.ts";
 import "../css/braille.css";
 
 import { type BrailleCell, BrailleConverter, type BrailleParams } from "./braille_converter.ts";
+import { getPreset, palettePresets }                              from "./braille_palettes.ts";
 
 window.addEventListener("DOMContentLoaded", init);
 
@@ -35,6 +36,7 @@ function init(): void
     let dotFill                            = 0.6;
     let cellSpacing                        = 0.32;
 
+    const defaultPalette = getPreset("Web Safe 216") ?? palettePresets[0]!;
     const params: BrailleParams = {
         columns           : 128,
         rows              : 128,
@@ -42,7 +44,10 @@ function init(): void
         alphaThreshold    : 32,
         gamma             : 0.6,
         greyscale         : true,
-        normalizeGreyscale: true
+        normalizeGreyscale: true,
+        paletteSaturation : 1,
+        paletteBrightness : 1,
+        palette           : defaultPalette.colors
     };
 
     const drawResult = () =>
@@ -130,6 +135,76 @@ function init(): void
         params.normalizeGreyscale = normalize.checked;
         updateResult();
     });
+
+    const greyscaleTab      = document.querySelector<HTMLButtonElement>("#greyscale-tab")!;
+    const paletteTab        = document.querySelector<HTMLButtonElement>("#palette-tab")!;
+    const greyscaleSettings = document.querySelector<HTMLElement>("#greyscale-settings")!;
+    const paletteSettings   = document.querySelector<HTMLElement>("#palette-settings")!;
+    const palettePreset     = document.querySelector<HTMLSelectElement>("#palette-preset")!;
+    const paletteControls   = paletteSettings.querySelectorAll<HTMLInputElement | HTMLSelectElement>("input, select");
+
+    for (const [index, preset] of palettePresets.entries())
+    {
+        const option       = document.createElement("option");
+        option.value       = String(index);
+        option.textContent = preset.name;
+        palettePreset.append(option);
+    }
+    palettePreset.value = String(palettePresets.indexOf(defaultPalette));
+    palettePreset.addEventListener("change", () =>
+    {
+        params.palette = palettePresets[Number(palettePreset.value)]!.colors;
+        updateResult();
+    });
+
+    for (const [id, key] of [["palette-saturation", "paletteSaturation"], ["palette-brightness", "paletteBrightness"]] as const)
+    {
+        const control = document.querySelector<HTMLInputElement>(`#${id}`)!;
+        const value   = document.querySelector<HTMLOutputElement>(`#${id}-value`)!;
+        control.value = String(params[key] * 100);
+        value.value   = `${control.value}%`;
+        control.addEventListener("input", () =>
+        {
+            params[key] = control.valueAsNumber / 100;
+            value.value = `${control.value}%`;
+            updateResult();
+        });
+    }
+
+    const selectMode = (greyscale: boolean) =>
+    {
+        params.greyscale         = greyscale;
+        greyscaleSettings.hidden = !greyscale;
+        paletteSettings.hidden   = greyscale;
+        normalize.disabled       = !greyscale;
+        for (const control of paletteControls)
+        {
+            control.disabled = greyscale;
+        }
+
+        greyscaleTab.setAttribute("aria-selected", String(greyscale));
+        paletteTab.setAttribute("aria-selected", String(!greyscale));
+        greyscaleTab.tabIndex = greyscale ? 0 : -1;
+        paletteTab.tabIndex   = greyscale ? -1 : 0;
+        updateResult();
+    };
+    greyscaleTab.addEventListener("click", () => selectMode(true));
+    paletteTab.addEventListener("click", () => selectMode(false));
+    for (const tab of [greyscaleTab, paletteTab])
+    {
+        tab.addEventListener("keydown", event =>
+        {
+            if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
+            {
+                return;
+            }
+
+            event.preventDefault();
+            const greyscale = event.key === "Home" || (event.key !== "End" && !params.greyscale);
+            selectMode(greyscale);
+            (greyscale ? greyscaleTab : paletteTab).focus();
+        });
+    }
 
     const weight      = document.querySelector<HTMLInputElement>("#font-weight")!;
     const weightValue = document.querySelector<HTMLOutputElement>("#font-weight-value")!;
