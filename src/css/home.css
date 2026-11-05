@@ -1,10 +1,16 @@
 main {
     display               : grid;
-    grid-template-columns : 160px minmax(0, 1fr) 180px;
+    grid-template-columns : 160px minmax(0, 1fr) 160px;
     gap                   : 16px;
 }
 
 main > header,
 main > footer {
     grid-column : 1 / -1;
+}
+
+@media (max-width : 700px) {
+    main {
+        grid-template-columns : minmax(0, 1fr);
+    }
 }

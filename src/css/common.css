@@ -6,12 +6,13 @@
 :root {
     --min-inline-size   : 880px;
     --main-body-padding : 16px;
+
     /* One source-art pixel occupies two CSS pixels. */
     --art-pixel         : 2px;
 }
 
 body {
-    min-inline-size  : var(--min-inline-size);
+    min-inline-size  : 0;
     background-color : var(--color-background);
     color            : var(--color-text);
     padding          : var(--main-body-padding);

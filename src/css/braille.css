@@ -41,7 +41,8 @@ label[for="image-upload-button"] {
 }
 
 .control-list > h2 {
-    color : var(--color-dos-blue);
+    color            : var(--color-dos-blue);
+    margin-block-end : 8px;
 }
 
 .result-panel {
@@ -75,4 +76,16 @@ label[for="image-upload-button"] {
 /*placeholder*/
 .footer {
     height : 128px;
+}
+
+@media (max-width : 700px) {
+    .preview-panel {
+        grid-template-columns : minmax(0, 1fr);
+    }
+
+    .result-heading,
+    .heading-left {
+        flex-wrap : wrap;
+        gap       : 12px;
+    }
 }
