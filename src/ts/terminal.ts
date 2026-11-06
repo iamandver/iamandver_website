@@ -104,7 +104,7 @@ export function initTerminal(): void
         {
             /*
              * possible commands:
-             * hi, bye,
+             * hi, bye, <3
              */
             case "help":
                 write(

@@ -12,8 +12,10 @@ dist
 dist-ssr
 *.local
 
-# Keep the asset library local, except for site fonts and their licenses.
+# Keep the asset library local, except for assets used by the site and their licenses.
 /src/assets/**
+!/src/assets/img/
+!/src/assets/img/braille-preview.svg
 !/src/assets/fonts/
 !/src/assets/fonts/Fira_Mono/
 !/src/assets/fonts/Fira_Mono/FiraMono-Regular.ttf

@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8"/>
-    <!--    <meta name="viewport" content="width=880"/>-->
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>iamandver.com</title>
     <link rel="stylesheet" href="/src/css/common.css"/>
@@ -12,33 +11,46 @@
 
 <body>
 
-<div class="controls"></div>
-
 <main>
 
     <header class="panel-frame">
         <h1 class="main-title">Hi! This is the site of <span class="accent">AndVer</span>. Explore and have fun!
         </h1>
     </header>
+
     <aside class="panel-frame navigation-panel">
         <h2 class="panel-title">My Stuff</h2>
-        <a class="navigation-link" href="./braille.html">Pixel Art</a>
-        <a class="navigation-link" href="./braille.html">Music</a>
+        <a class="navigation-link" href="">Pixel Art</a>
+        <a class="navigation-link" href="">Music</a>
     </aside>
-    <section class="panel-frame">Welcome and projects</section>
+
+    <section class="panel-frame featured-project">
+        <div class="text-box prose">
+            <h2 class="panel-title">Image to Braille</h2>
+            <div class="prose">
+                <p>A little experiment in turning images into Braille art. Bring an image and play around with the palettes and dots.</p>
+                <p><a class="text-link" href="./braille.html">Try the converter</a></p>
+            </div>
+        </div>
+    </section>
+
     <aside class="panel-frame">
         <h2 class="panel-title">Projects</h2>
         <a class="navigation-link" href="./braille.html">Image to Braille</a>
+        <a class="navigation-link" href="">The cinder Child</a>
     </aside>
+
     <footer class="panel-frame">
-        <h2 class="panel-title">Links</h2>
-        <a class="navigation-link" href="">Legal</a>
-        <a class="navigation-link" href="">My Stuff</a>
-        <a class="navigation-link" href="">Credits</a>
+        <h2 class="panel-title">More Links</h2>
+        <a class="navigation-link" href="./about_me.html">About Me</a>
+        <a class="navigation-link" href="./tools_and_credits.html">Tools & Credits</a>
+        <a class="navigation-link" href="./legal_crap.html">Legal Crap</a>
         <!--        All content on this website is Copyright (C) 2026 Andras Vermes, unless otherwise specified. In other words: don't fuck with my art.-->
     </footer>
 
 </main>
+
+<div class="copyright">© 2026 iamandver</div>
 
 <script type="module" src="/src/ts/main.ts"></script>
 

@@ -5,12 +5,14 @@ main {
 }
 
 main > header,
-main > footer {
+main > footer,
+.copyright {
     grid-column : 1 / -1;
 }
 
-.main-title {
-    /*color : var(--color-dos-cyan);*/
+.featured-project {
+    display : grid;
+    gap     : 16px;
 }
 
 .navigation-panel {

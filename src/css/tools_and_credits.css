@@ -1,0 +1,59 @@
+/*.intro {*/
+/*}*/
+
+.tools-panel {
+    margin-block-start : 32px;
+    /*padding : 0;*/
+}
+
+.tools-panel + .tools-panel {
+    margin-block-start : 32px;
+}
+
+.tools-list {
+    inline-size  : 100%;
+    table-layout : fixed;
+    text-align   : start;
+    border       : 2px solid var(--color-grey-dark);
+
+}
+
+.tools-list th,
+.tools-list td {
+    padding        : 8px;
+    vertical-align : top;
+    overflow-wrap  : anywhere;
+}
+
+.tools-list th {
+    inline-size : 25%;
+    line-height : 1.6;
+    text-align  : start;
+}
+
+.tools-list tr + tr {
+    border-block-start : 2px solid var(--color-grey-dark);
+}
+
+/*td p {*/
+/*    color : var(--color-cyan);*/
+/*}*/
+
+@media (max-width : 700px) {
+    .tools-list,
+    .tools-list tbody,
+    .tools-list tr,
+    .tools-list th,
+    .tools-list td {
+        display : block;
+    }
+
+    .tools-list th {
+        inline-size       : auto;
+        padding-block-end : 8px;
+    }
+
+    .tools-list td {
+        padding-block-start : 0;
+    }
+}

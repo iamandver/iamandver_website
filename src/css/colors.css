@@ -1,6 +1,5 @@
 :root {
-    /* Classic DOS / default CGA-EGA 16-color palette, in hardware order.
-       Preview only; not applied to the site. All values also fit 12-bit RGB. */
+    /* DOS palette references. All values also fit 12-bit RGB. */
     --color-dos-black            : #000000;
 
     --color-dos-magenta          : #aa00aa;
@@ -59,22 +58,23 @@
     --color-background           : var(--color-black);
     --panel-background           : var(--color-black);
     --panel-border               : var(--color-cyan);
-    --color-text-dark            : var(--color-red);
+    --color-status               : var(--color-red);
     --color-text                 : var(--color-grey);
+    --color-text-muted           : var(--color-grey-dark);
     --color-text-bright          : var(--color-white);
     --color-text-selected        : var(--color-black);
     --color-text-selected-bg     : var(--color-green);
     --color-highlight-text       : var(--color-black);
+    --color-highlight-bg         : var(--color-yellow-bright);
     --color-heading              : var(--color-yellow-bright);
+    --color-page-heading         : var(--color-cyan);
     --color-accent               : var(--color-blue-bright);
     --color-link                 : var(--color-green);
     --color-link-hover           : var(--color-green);
     --color-link-visited         : var(--color-green);
+    --color-link-active-text     : var(--color-black);
 
     --color-text-box-bg          : var(--color-12bit-grey-4);
-    --color-text-box-text        : var(--color-grey);
-    --color-text-box-title       : var(--color-brown);
-    --color-text-box-title-bg    : var(--color-black);
 
     --command-bar-background     : var(--color-cyan);
     --command-bar-text           : var(--color-black);
@@ -96,6 +96,8 @@
     --control-highlight          : #f0f0f0;
     --control-shadow             : #505050;
     --control-ink                : #000000;
+    --control-heading            : var(--color-blue);
+    --control-invalid-text       : var(--color-red);
     --control-field              : var(--color-background);
     --control-field-text         : var(--color-text);
     --control-track              : #404040;
