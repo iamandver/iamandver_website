@@ -10,7 +10,7 @@ export function initNumberControls(root: Document | HTMLElement = document): voi
 
     for (const group of root.querySelectorAll<HTMLElement>(".number-control"))
     {
-        const input = group.querySelector<HTMLInputElement>('input[type="number"]')!;
+        const input        = group.querySelector<HTMLInputElement>("input[type=\"number\"]")!;
         let lastValidValue = input.value;
         input.addEventListener("input", () =>
         {
@@ -38,7 +38,8 @@ export function initNumberControls(root: Document | HTMLElement = document): voi
                 if (button.dataset.step === "up")
                 {
                     input.stepUp();
-                } else
+                }
+                else
                 {
                     input.stepDown();
                 }
@@ -75,7 +76,7 @@ export function initNumberControls(root: Document | HTMLElement = document): voi
                         repeatTimer = window.setTimeout(repeat, 75);
                     }
                 };
-                repeatTimer = window.setTimeout(repeat, 400);
+                repeatTimer  = window.setTimeout(repeat, 400);
             });
 
             button.addEventListener("click", event =>

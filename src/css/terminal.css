@@ -21,7 +21,7 @@ body {
     align-items     : center;
     gap             : 8px;
     block-size      : 100%;
-    max-inline-size : calc(var(--min-inline-size) - var(--main-body-padding) * 2);
+    max-inline-size : calc(var(--max-content-width) - var(--main-body-padding) * 2);
     margin-inline   : auto;
     padding-inline  : var(--main-body-padding);
 }
@@ -67,7 +67,7 @@ body {
     color              : var(--terminal-text);
     border             : 3px double var(--terminal-border);
     inline-size        : calc(100% - var(--main-body-padding) * 2);
-    max-inline-size    : var(--min-inline-size);
+    max-inline-size    : var(--max-content-width);
     block-size         : 360px;
     max-block-size     : calc(100dvh - var(--controls-bar-height) - 40px);
     box-shadow         : 8px 8px 0 var(--terminal-shadow);
@@ -128,12 +128,12 @@ body {
 }
 
 .terminal-prompt {
-    display             : flex;
-    align-items         : center;
-    gap                 : 8px;
-    min-block-size      : 28px;
-    border-block-start  : 1px solid var(--terminal-border);
-    padding             : 8px 16px 16px;
+    display            : flex;
+    align-items        : center;
+    gap                : 8px;
+    min-block-size     : 28px;
+    border-block-start : 1px solid var(--terminal-border);
+    padding            : 8px 16px 16px;
 }
 
 #terminal-input {

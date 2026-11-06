@@ -87,7 +87,7 @@ input[type="number"] {
 }
 
 input[type="number"]:invalid {
-    color : var(--color-dos-red);
+    color : var(--color-red);
 }
 
 input[type="range"] {

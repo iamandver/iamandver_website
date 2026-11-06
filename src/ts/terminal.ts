@@ -102,6 +102,10 @@ export function initTerminal(): void
         write(`andver> ${command}`, "terminal-command");
         switch (command.toLowerCase())
         {
+            /*
+             * possible commands:
+             * hi, bye,
+             */
             case "help":
                 write(
                     "home     return home\n" +
