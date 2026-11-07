@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>iamandver.com/2048</title>
+    <link rel="stylesheet" href="/src/css/common.css"/>
+    <link rel="stylesheet" href="/src/css/2048.css"/>
+</head>
+
+<body>
+
+<div class="page game-page">
+    <main class="game-layout">
+
+        <nav class="page-navigation">
+            <a class="navigation-link" href="./">[..] Home</a>
+        </nav>
+
+        <div class="game-container">
+
+            <section class="game">
+                <div class="game-toolbar">
+                    <h1 class="page-title">2048</h1>
+                    <button id="new-game" type="button">New game</button>
+                </div>
+
+                <div class="game-scores">
+                    <span>Score <output id="game-score">0</output></span>
+                    <span>Last <output id="last-score">—</output></span>
+                    <span>Best <output id="best-score">0</output></span>
+                </div>
+
+                <table class="game-board">
+                    <tbody>
+                    <tr>
+                        <td id="cell-0-0"></td>
+                        <td id="cell-0-1"></td>
+                        <td id="cell-0-2"></td>
+                        <td id="cell-0-3"></td>
+                    </tr>
+                    <tr>
+                        <td id="cell-1-0"></td>
+                        <td id="cell-1-1"></td>
+                        <td id="cell-1-2"></td>
+                        <td id="cell-1-3"></td>
+                    </tr>
+                    <tr>
+                        <td id="cell-2-0"></td>
+                        <td id="cell-2-1"></td>
+                        <td id="cell-2-2"></td>
+                        <td id="cell-2-3"></td>
+                    </tr>
+                    <tr>
+                        <td id="cell-3-0"></td>
+                        <td id="cell-3-1"></td>
+                        <td id="cell-3-2"></td>
+                        <td id="cell-3-3"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <p id="game-status" class="game-status">Swipe or use arrow keys.</p>
+            </section>
+
+        </div>
+
+    </main>
+
+    <footer class="copyright">Copyright © 2026 iamandver</footer>
+</div>
+
+<script type="module" src="/src/ts/2048.ts"></script>
+
+</body>
+
+</html>

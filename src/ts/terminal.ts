@@ -119,6 +119,10 @@ export function initTerminal(): void
             case "braille":
                 window.location.assign(`${import.meta.env.BASE_URL}braille.html`);
                 break;
+            case "2048":
+                window.location.assign(`${import.meta.env.BASE_URL}2048.html`);
+                break;
+
             case "clear":
                 transcript.replaceChildren();
                 break;

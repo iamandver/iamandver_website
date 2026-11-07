@@ -5,9 +5,7 @@ export default defineConfig({
                                 input: [
                                     "index.html",
                                     "braille.html",
-
-                                    "pixel_art.html",
-
+                                    "2048.html",
                                     "about_me.html",
                                     "tools_and_credits.html",
                                     "legal_crap.html"
