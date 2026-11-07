@@ -1,7 +1,22 @@
+html {
+    overscroll-behavior : none;
+}
+
+body {
+    touch-action : none;
+}
+
+/* The terminal may have a scrollable transcript; the game stays a gesture surface. */
+body:has(.terminal:not([hidden])) {
+    touch-action : auto;
+}
+
 .game-page {
     min-block-size : calc(100dvh - var(--controls-bar-height));
     display        : flex;
     flex-direction : column;
+    touch-action   : none;
+    user-select    : none;
 }
 
 .game-layout {
@@ -90,54 +105,56 @@
 }
 
 .game-board {
-    inline-size     : 100%;
-    table-layout    : fixed;
-    border-collapse : separate;
-    border-spacing  : 6px;
-    border          : 3px double var(--color-brown);
-    touch-action    : none;
-    user-select     : none;
+    inline-size           : 100%;
+    display               : grid;
+    grid-template-columns : repeat(4, minmax(0, 1fr));
+    gap                   : 6px;
+    padding               : 6px;
+    border                : 3px double var(--color-brown);
+    touch-action          : none;
+    user-select           : none;
 }
 
-.game-board td {
-    block-size       : 96px;
+.game-cell {
+    aspect-ratio     : 1;
+    min-inline-size  : 0;
+    display          : flex;
+    align-items      : center;
+    justify-content  : flex-end;
     padding-inline   : 0.5ch;
     font-size        : 32px;
-    text-align       : end;
-    vertical-align   : middle;
     background-color : var(--color-text-box-bg);
     /*box-shadow       : inset 0 0 0 2px var(--color-text-box-bg);*/
 }
 
-.game-board td[data-color-group="low"] {
+.game-cell[data-color-group="low"] {
     background-color : var(--color-grey-dark);
     color            : var(--color-text-bright);
 }
 
-.game-board td[data-color-group="medium"] {
+.game-cell[data-color-group="medium"] {
     background-color : var(--color-grey);
     color            : var(--color-black);
 }
 
-.game-board td[data-color-group="high"] {
+.game-cell[data-color-group="high"] {
     background-color : var(--color-brown);
     color            : var(--color-text-bright);
 }
 
-.game-board td[data-color-group="highest"] {
+.game-cell[data-color-group="highest"] {
     background-color : var(--color-yellow-bright);
     color            : var(--color-black);
 }
 
 @media (max-width : 520px) {
-    .game-board td {
-        block-size : 72px;
-        font-size  : 24px;
+    .game-cell {
+        font-size : 24px;
     }
 }
 
 @media (max-width : 360px) {
-    .game-board td {
+    .game-cell {
         font-size : 20px;
     }
 }

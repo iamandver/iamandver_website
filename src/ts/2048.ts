@@ -24,7 +24,7 @@ function init(): void
     const finalScoreElement   = document.getElementById("game-final-score")!;
     const newRecordElement    = document.getElementById("game-new-record")!;
     const newGameButton       = document.getElementById("new-game")!;
-    const boardElement        = document.querySelector<HTMLTableElement>(".game-board")!;
+    const gestureSurface      = document.body;
 
     const cellElements = game.cells.map((rowCells, row) =>
                                             rowCells.map((_, column) =>
@@ -131,7 +131,7 @@ function init(): void
 
     let swipeStart: { pointerId: number; x: number; y: number } | undefined;
 
-    boardElement.addEventListener("pointerdown", event =>
+    gestureSurface.addEventListener("pointerdown", event =>
     {
         if (!event.isPrimary)
         {
@@ -139,16 +139,18 @@ function init(): void
             return;
         }
 
-        if (event.button !== 0 || isTerminalOpen() || game.status !== "playing")
+        const target = event.target;
+        if (event.button !== 0 || isTerminalOpen() || game.status !== "playing" ||
+            (target instanceof Element && target.closest("a, button, input, select, textarea, [contenteditable], .controls")))
         {
             return;
         }
 
         swipeStart = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
-        boardElement.setPointerCapture(event.pointerId);
+        gestureSurface.setPointerCapture(event.pointerId);
     });
 
-    boardElement.addEventListener("pointerup", event =>
+    gestureSurface.addEventListener("pointerup", event =>
     {
         if (swipeStart?.pointerId !== event.pointerId)
         {
@@ -178,8 +180,8 @@ function init(): void
             swipeStart = undefined;
         }
     };
-    boardElement.addEventListener("pointercancel", cancelSwipe);
-    boardElement.addEventListener("lostpointercapture", cancelSwipe);
+    gestureSurface.addEventListener("pointercancel", cancelSwipe);
+    gestureSurface.addEventListener("lostpointercapture", cancelSwipe);
 
     newGameButton.addEventListener("click", () =>
     {
