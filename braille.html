@@ -11,168 +11,176 @@
 
 <body>
 
-<main>
+<div class="page">
+    <main>
 
-    <nav class="page-navigation">
-        <a class="navigation-link" href="./">[..] Home</a>
-    </nav>
+        <nav class="page-navigation">
+            <a class="navigation-link" href="./">[..] Home</a>
+        </nav>
 
-    <header>
+        <header>
 
-        <h1 class="page-title">Braille Converter</h1>
-        <div class="text-box prose converter-intro">
-            <h2>What's this about</h2>
-            <p>This is a little experiment I have been working on recently. I really love ASCII art and was wondering if I
-                could push it far enough to be used as game graphics. Then I discovered Braille characters, which is a great way to represent a
-                2 by
-                4 pixel cluster. So I wrote a little image converter that takes any image and uses Braille characters to represent it as best as
-                possible.
-            </p>
-            <p>
-                What's really cool is that each character gets only one color, so the resulting image has a lower color resolution so to
-                speak, which makes for very interesting patterns. All the palettes I added can be found on
-                <a class="text-link external-link" target="_blank" href="https://lospec.com/">Lospec</a>
-                under the same name (apart from the Web Safe color, which can be found pretty much anywhere). Adding a new palette is relatively
-                easy so if you get in touch I might consider it. I have not started working on a game yet that might use this as graphics, but
-                the
-                image generation itself is pretty cool. There are a few parameters for you to play around with too.
-                <span class="emphasize">Have fun!</span>
-            </p>
-        </div>
-
-        <ul>
-            <li>Later I would like to style lists.</li>
-            <li>So I'm leaving this here until then so I don't forget.</li>
-        </ul>
-
-        <label for="image-upload-button">Open an image:</label>
-        <input id="image-upload-button" class="image-file" type="file" accept="image/*">
-
-    </header>
-
-    <div class="braille-converter-ui-root">
-
-        <section class="preview-panel">
-
-            <div class="source-image-container">
-                <div class="source-image panel-frame">
-                    <h2 class="panel-title">Source image</h2>
-                    <canvas id="source-image"></canvas>
-                </div>
+            <h1 class="page-title">Braille Converter</h1>
+            <div class="text-box prose converter-intro">
+                <h2>What's this about</h2>
+                <p>This is a little experiment I have been working on recently. I really love ASCII art and was wondering if I
+                    could push it far enough to be used as game graphics. Then I discovered Braille characters, which is a great way to
+                    represent a
+                    2 by
+                    4 pixel cluster. So I wrote a little image converter that takes any image and uses Braille characters to represent it as
+                    best as
+                    possible.
+                </p>
+                <p>
+                    What's really cool is that each character gets only one color, so the resulting image has a lower color resolution so to
+                    speak, which makes for very interesting patterns. All the palettes I added can be found on
+                    <a class="text-link external-link" target="_blank" href="https://lospec.com/">Lospec</a>
+                    under the same name (apart from the Web Safe color, which can be found pretty much anywhere). Adding a new palette is
+                    relatively
+                    easy so if you get in touch I might consider it. I have not started working on a game yet that might use this as graphics,
+                    but
+                    the
+                    image generation itself is pretty cool. There are a few parameters for you to play around with too.
+                    <span class="emphasize">Have fun!</span>
+                </p>
             </div>
 
-            <div id="braille-controls" class="braille-controls">
-                <fieldset id="conversion-settings" class="control-list" disabled>
-                    <h2>Settings</h2>
-                    <div class="conversion-mode-tabs" role="tablist" aria-label="Rendering mode">
-                        <button id="greyscale-tab" type="button" role="tab" aria-selected="true" aria-controls="greyscale-settings">Greyscale
-                        </button>
-                        <button id="palette-tab" type="button" role="tab" aria-selected="false" aria-controls="palette-settings" tabindex="-1">
-                            Palette
-                        </button>
+            <ul>
+                <li>Later I would like to style lists.</li>
+                <li>So I'm leaving this here until then so I don't forget.</li>
+            </ul>
+
+            <label for="image-upload-button">Open an image:</label>
+            <input id="image-upload-button" class="image-file" type="file" accept="image/*">
+
+        </header>
+
+        <div class="braille-converter-ui-root">
+
+            <section class="preview-panel">
+
+                <div class="source-image-container">
+                    <div class="source-image panel-frame">
+                        <h2 class="panel-title">Source image</h2>
+                        <canvas id="source-image"></canvas>
                     </div>
-                    <div class="conversion-mode-panels">
-                        <div id="greyscale-settings" role="tabpanel" aria-labelledby="greyscale-tab">
-                            <div class="control">
-                                <label for="normalize-greyscale">Normalize</label>
-                                <input id="normalize-greyscale" type="checkbox" checked>
-                            </div>
+                </div>
+
+                <div id="braille-controls" class="braille-controls">
+                    <fieldset id="conversion-settings" class="control-list" disabled>
+                        <h2>Settings</h2>
+                        <div class="conversion-mode-tabs" role="tablist" aria-label="Rendering mode">
+                            <button id="greyscale-tab" type="button" role="tab" aria-selected="true" aria-controls="greyscale-settings">
+                                Greyscale
+                            </button>
+                            <button id="palette-tab"
+                                    type="button"
+                                    role="tab"
+                                    aria-selected="false"
+                                    aria-controls="palette-settings"
+                                    tabindex="-1"
+                            >
+                                Palette
+                            </button>
                         </div>
-                        <div id="palette-settings" role="tabpanel" aria-labelledby="palette-tab" hidden>
-                            <div class="control">
-                                <label for="palette-preset">Palette</label>
-                                <div class="select-control">
-                                    <select id="palette-preset" disabled></select>
-                                    <span class="select-arrow" aria-hidden="true"></span>
+                        <div class="conversion-mode-panels">
+                            <div id="greyscale-settings" role="tabpanel" aria-labelledby="greyscale-tab">
+                                <div class="control">
+                                    <label for="normalize-greyscale">Normalize</label>
+                                    <input id="normalize-greyscale" type="checkbox" checked>
                                 </div>
                             </div>
-                            <div class="control">
-                                <label for="palette-saturation">Saturation</label>
-                                <input id="palette-saturation" type="range" min="0" max="300" step="1" value="100" disabled>
-                                <output id="palette-saturation-value" for="palette-saturation">100%</output>
-                            </div>
-                            <div class="control">
-                                <label for="palette-brightness">Brightness</label>
-                                <input id="palette-brightness" type="range" min="0" max="200" step="1" value="100" disabled>
-                                <output id="palette-brightness-value" for="palette-brightness">100%</output>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="control">
-                        <label for="max-columns">Max columns</label>
-                        <div class="number-control">
-                            <input id="max-columns" type="number" min="1" max="512" step="1" value="128" required>
-                            <div class="number-stepper">
-                                <button class="number-step" type="button" data-step="up" aria-label="Increase max columns"></button>
-                                <button class="number-step" type="button" data-step="down" aria-label="Decrease max columns"></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="control">
-                        <label for="max-rows">Max rows</label>
-                        <div class="number-control">
-                            <input id="max-rows" type="number" min="1" max="512" step="1" value="128" required>
-                            <div class="number-stepper">
-                                <button class="number-step" type="button" data-step="up" aria-label="Increase max rows"></button>
-                                <button class="number-step" type="button" data-step="down" aria-label="Decrease max rows"></button>
+                            <div id="palette-settings" role="tabpanel" aria-labelledby="palette-tab" hidden>
+                                <div class="control">
+                                    <label for="palette-preset">Palette</label>
+                                    <div class="select-control">
+                                        <select id="palette-preset" disabled></select>
+                                        <span class="select-arrow" aria-hidden="true"></span>
+                                    </div>
+                                </div>
+                                <div class="control">
+                                    <label for="palette-saturation">Saturation</label>
+                                    <input id="palette-saturation" type="range" min="0" max="300" step="1" value="100" disabled>
+                                    <output id="palette-saturation-value" for="palette-saturation">100%</output>
+                                </div>
+                                <div class="control">
+                                    <label for="palette-brightness">Brightness</label>
+                                    <input id="palette-brightness" type="range" min="0" max="200" step="1" value="100" disabled>
+                                    <output id="palette-brightness-value" for="palette-brightness">100%</output>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="control">
-                        <label for="gamma">Gamma</label>
-                        <input id="gamma" type="range" min="0.1" max="3" step="0.05" value="0.6">
-                        <output id="gamma-value" for="gamma">0.60</output>
-                    </div>
-                    <div class="control">
-                        <label for="black-threshold">Black threshold</label>
-                        <input id="black-threshold" type="range" min="0" max="255" step="1" value="64">
-                        <output id="black-threshold-value" for="black-threshold">64</output>
-                    </div>
-                    <div class="control">
-                        <label for="alpha-threshold">Alpha threshold</label>
-                        <input id="alpha-threshold" type="range" min="0" max="255" step="1" value="32">
-                        <output id="alpha-threshold-value" for="alpha-threshold">32</output>
-                    </div>
-                    <div class="control">
-                        <label for="font-weight">Font weight</label>
-                        <input id="font-weight" type="range" min="10" max="100" step="1" value="60">
-                        <output id="font-weight-value" for="font-weight">60%</output>
-                    </div>
-                    <div class="control">
-                        <label for="cell-spacing">Cell spacing</label>
-                        <input id="cell-spacing" type="range" min="0" max="100" step="1" value="0">
-                        <output id="cell-spacing-value" for="cell-spacing">0%</output>
-                    </div>
-                </fieldset>
-            </div>
-
-        </section>
-
-        <section class="result-panel">
-            <div class="result-heading">
-                <div class="heading-left">
-                    <!--                    <h2>Braille</h2>-->
-                    <button id="copy-braille" type="button" disabled>Copy Braille</button>
-                    <span id="copy-status"></span>
+                        <div class="control">
+                            <label for="max-columns">Max columns</label>
+                            <div class="number-control">
+                                <input id="max-columns" type="number" min="1" max="512" step="1" value="128" required>
+                                <div class="number-stepper">
+                                    <button class="number-step" type="button" data-step="up" aria-label="Increase max columns"></button>
+                                    <button class="number-step" type="button" data-step="down" aria-label="Decrease max columns"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label for="max-rows">Max rows</label>
+                            <div class="number-control">
+                                <input id="max-rows" type="number" min="1" max="512" step="1" value="128" required>
+                                <div class="number-stepper">
+                                    <button class="number-step" type="button" data-step="up" aria-label="Increase max rows"></button>
+                                    <button class="number-step" type="button" data-step="down" aria-label="Decrease max rows"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label for="gamma">Gamma</label>
+                            <input id="gamma" type="range" min="0.1" max="3" step="0.05" value="0.6">
+                            <output id="gamma-value" for="gamma">0.60</output>
+                        </div>
+                        <div class="control">
+                            <label for="black-threshold">Black threshold</label>
+                            <input id="black-threshold" type="range" min="0" max="255" step="1" value="64">
+                            <output id="black-threshold-value" for="black-threshold">64</output>
+                        </div>
+                        <div class="control">
+                            <label for="alpha-threshold">Alpha threshold</label>
+                            <input id="alpha-threshold" type="range" min="0" max="255" step="1" value="32">
+                            <output id="alpha-threshold-value" for="alpha-threshold">32</output>
+                        </div>
+                        <div class="control">
+                            <label for="font-weight">Font weight</label>
+                            <input id="font-weight" type="range" min="10" max="100" step="1" value="60">
+                            <output id="font-weight-value" for="font-weight">60%</output>
+                        </div>
+                        <div class="control">
+                            <label for="cell-spacing">Cell spacing</label>
+                            <input id="cell-spacing" type="range" min="0" max="100" step="1" value="0">
+                            <output id="cell-spacing-value" for="cell-spacing">0%</output>
+                        </div>
+                    </fieldset>
                 </div>
-                <div id="image-status" class="image-status"></div>
-            </div>
-            <div id="result-preview" class="result-image panel-frame">
-                <h2 class="panel-title">Braille</h2>
-                <canvas id="result-image" width="0" height="0"></canvas>
-            </div>
-        </section>
 
-    </div>
+            </section>
 
-</main>
+            <section class="result-panel">
+                <div class="result-heading">
+                    <div class="heading-left">
+                        <!--                    <h2>Braille</h2>-->
+                        <button id="copy-braille" type="button" disabled>Copy Braille</button>
+                        <span id="copy-status"></span>
+                    </div>
+                    <div id="image-status" class="image-status"></div>
+                </div>
+                <div id="result-preview" class="result-image panel-frame">
+                    <h2 class="panel-title">Braille</h2>
+                    <canvas id="result-image" width="0" height="0"></canvas>
+                </div>
+            </section>
 
-<div class="copyright">© 2026 iamandver</div>
+        </div>
 
+    </main>
 
-<footer class="footer">
-
-</footer>
+    <footer class="copyright">Copyright © 2026 iamandver</footer>
+</div>
 
 <script type="module" src="/src/ts/braille.ts"></script>
 

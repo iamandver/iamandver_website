@@ -6,7 +6,7 @@
 
 :root {
     --max-content-width : 960px;
-    --main-body-padding : 16px;
+    --page-padding      : 16px;
 
     /* One source-art pixel occupies two CSS pixels. */
     --art-pixel         : 2px;
@@ -18,9 +18,9 @@ body {
     color            : var(--color-text);
 }
 
-main {
-    padding         : var(--main-body-padding);
-    max-inline-size : calc(var(--max-content-width) - var(--main-body-padding) * 2);
+.page {
+    padding         : var(--page-padding);
+    max-inline-size : calc(var(--max-content-width) - var(--page-padding) * 2);
     margin-inline   : auto;
 }
 
@@ -33,9 +33,9 @@ main {
     position        : relative;
     min-inline-size : 0;
     padding         : 16px;
-    background      : var(--panel-background);
+    background      : var(--color-panel-background);
     color           : var(--color-text);
-    border          : 3px double var(--panel-border);
+    border          : 3px double var(--color-panel-border);
 }
 
 /* The panel background masks the top border behind its title. */
@@ -46,7 +46,7 @@ main {
     max-inline-size    : calc(100% - 16px);
     margin             : 0;
     padding-inline     : 8px;
-    background         : var(--panel-background);
+    background         : var(--color-panel-background);
     color              : var(--color-heading);
     transform          : translateY(-50%);
 }
@@ -107,6 +107,7 @@ ul {
     content : "[→]";
     padding : 4px;
     color   : var(--color-text-muted);
+    /*text-decoration : none;*/
 }
 
 .external-link:hover::after,
@@ -174,7 +175,7 @@ ul {
 }
 
 .copyright {
-    text-align : center;
-    margin     : auto 0;
-    color      : var(--color-brown);
+    text-align   : center;
+    margin-block : 16px;
+    color        : var(--color-brown);
 }

@@ -103,11 +103,6 @@ label[for="image-upload-button"] {
     /*max-block-size : 220px;*/
 }
 
-/*placeholder*/
-.footer {
-    height : 128px;
-}
-
 @media (max-width : 700px) {
     .preview-panel {
         grid-template-columns : minmax(0, 1fr);

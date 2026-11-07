@@ -12,8 +12,8 @@ body {
     inset-block-end  : 0;
     z-index          : 10;
     block-size       : var(--controls-bar-height);
-    background-color : var(--command-bar-background);
-    color            : var(--command-bar-text);
+    background-color : var(--color-command-bar-background);
+    color            : var(--color-command-bar-text);
 }
 
 .controls-inner {
@@ -21,9 +21,9 @@ body {
     align-items     : center;
     gap             : 8px;
     block-size      : 100%;
-    max-inline-size : calc(var(--max-content-width) - var(--main-body-padding) * 2);
+    max-inline-size : calc(var(--max-content-width) - var(--page-padding) * 2);
     margin-inline   : auto;
-    padding-inline  : var(--main-body-padding);
+    padding-inline  : var(--page-padding);
 }
 
 .controls-command {
@@ -41,12 +41,12 @@ body {
 .controls-command:hover,
 .controls-command:focus-visible,
 .controls-command[aria-expanded="true"] {
-    background-color : var(--command-bar-active-bg);
-    color            : var(--command-bar-active-text);
+    background-color : var(--color-command-bar-active-bg);
+    color            : var(--color-command-bar-active-text);
 }
 
 .controls-inner :focus-visible {
-    outline-color  : var(--command-bar-active-text);
+    outline-color  : var(--color-command-bar-active-text);
     outline-offset : -3px;
 }
 
@@ -66,7 +66,7 @@ body {
     background         : var(--terminal-background);
     color              : var(--terminal-text);
     border             : 3px double var(--terminal-border);
-    inline-size        : calc(100% - var(--main-body-padding) * 2);
+    inline-size        : calc(100% - var(--page-padding) * 2);
     max-inline-size    : var(--max-content-width);
     block-size         : 360px;
     max-block-size     : calc(100dvh - var(--controls-bar-height) - 40px);

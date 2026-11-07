@@ -1,109 +1,112 @@
 :root {
     /* DOS palette references. All values also fit 12-bit RGB. */
-    --color-dos-black            : #000000;
+    --color-dos-black               : #000000;
 
-    --color-dos-magenta          : #aa00aa;
-    --color-dos-blue             : #0000aa;
-    --color-dos-green            : #00aa00;
-    --color-dos-cyan             : #00aaaa;
-    --color-dos-red              : #aa0000;
-    --color-dos-brown            : #aa5500;
-    --color-dos-yellow           : #aaaa00;
-    --color-dos-grey             : #aaaaaa;
+    --color-dos-magenta             : #aa00aa;
+    --color-dos-blue                : #0000aa;
+    --color-dos-green               : #00aa00;
+    --color-dos-cyan                : #00aaaa;
+    --color-dos-red                 : #aa0000;
+    --color-dos-brown               : #aa5500;
+    --color-dos-yellow              : #aaaa00;
+    --color-dos-grey                : #aaaaaa;
 
-    --color-dos-grey-dark        : #555555;
-    --color-dos-blue-bright      : #5555ff;
-    --color-dos-green-bright     : #55ff55;
-    --color-dos-cyan-bright      : #55ffff;
-    --color-dos-red-bright       : #ff5555;
-    --color-dos-yellow-bright    : #ffff55;
-    --color-dos-white            : #ffffff;
+    --color-dos-grey-dark           : #555555;
+    --color-dos-blue-bright         : #5555ff;
+    --color-dos-green-bright        : #55ff55;
+    --color-dos-cyan-bright         : #55ffff;
+    --color-dos-red-bright          : #ff5555;
+    --color-dos-yellow-bright       : #ffff55;
+    --color-dos-white               : #ffffff;
 
     /* slightly adjusted more usable dos colors */
-    --color-dos-blue-bright-alt  : #5577ff;
-    --color-dos-red-alt          : #cc0000;
-    --color-dos-brown-alt        : #cc6600;
-    --color-dos-green-alt        : #33cc33;
-    --color-dos-cyan-alt         : #11bbbb;
-    --color-dos-grey-dark-alt    : #666666;
+    --color-dos-blue-bright-alt     : #5577ff;
+    --color-dos-red-alt             : #cc0000;
+    --color-dos-brown-alt           : #cc6600;
+    --color-dos-green-alt           : #33cc33;
+    --color-dos-cyan-alt            : #11bbbb;
+    --color-dos-grey-dark-alt       : #666666;
 
     /* ACTUAL colors used */
-    --color-black                : #000000;
+    --color-black                   : #000000;
 
-    --color-magenta              : var(--color-dos-magenta);
-    --color-blue                 : var(--color-dos-blue);
-    --color-green                : var(--color-dos-green-alt);
-    --color-cyan                 : var(--color-dos-cyan-alt);
-    --color-red                  : var(--color-dos-red-alt);
-    --color-brown                : var(--color-dos-brown-alt);
-    --color-yellow               : var(--color-dos-yellow);
-    --color-grey                 : var(--color-dos-grey);
+    --color-magenta                 : var(--color-dos-magenta);
+    --color-blue                    : var(--color-dos-blue);
+    --color-green                   : var(--color-dos-green-alt);
+    --color-cyan                    : var(--color-dos-cyan-alt);
+    --color-red                     : var(--color-dos-red-alt);
+    --color-brown                   : var(--color-dos-brown-alt);
+    --color-yellow                  : var(--color-dos-yellow);
+    --color-grey                    : var(--color-dos-grey);
 
-    --color-grey-dark-dim        : #555555;
-    --color-grey-dark            : var(--color-dos-grey-dark-alt);
-    --color-blue-bright          : var(--color-dos-blue-bright-alt);
-    --color-green-bright         : var(--color-dos-green-bright);
-    --color-cyan-bright          : var(--color-dos-cyan-bright);
-    --color-red-bright           : var(--color-dos-red-bright);
-    --color-yellow-bright        : var(--color-dos-yellow-bright);
-    --color-white                : var(--color-dos-white);
+    --color-grey-dark-dim           : #555555;
+    --color-grey-dark               : var(--color-dos-grey-dark-alt);
+    --color-blue-bright             : var(--color-dos-blue-bright-alt);
+    --color-green-bright            : var(--color-dos-green-bright);
+    --color-cyan-bright             : var(--color-dos-cyan-bright);
+    --color-red-bright              : var(--color-dos-red-bright);
+    --color-yellow-bright           : var(--color-dos-yellow-bright);
+    --color-white                   : var(--color-dos-white);
 
     /* some extra 12 bit grays mainly for text */
-    --color-12bit-grey-4         : #333333;
-    --color-12bit-grey-3         : #888888;
-    --color-12bit-grey-2         : #cccccc;
-    --color-12bit-grey-1         : #eeeeee;
+    --color-12bit-grey-4            : #333333;
+    --color-12bit-grey-3            : #888888;
+    --color-12bit-grey-2            : #cccccc;
+    --color-12bit-grey-1            : #eeeeee;
 
     /* use these colors in code ONLY so they have a layer of abstraction */
-    --color-background           : var(--color-black);
-    --panel-background           : var(--color-black);
-    --panel-border               : var(--color-cyan);
-    --color-status               : var(--color-red);
-    --color-text                 : var(--color-grey);
-    --color-text-muted           : var(--color-grey-dark);
-    --color-text-bright          : var(--color-white);
-    --color-text-selected        : var(--color-black);
-    --color-text-selected-bg     : var(--color-green);
-    --color-highlight-text       : var(--color-black);
-    --color-highlight-bg         : var(--color-yellow-bright);
-    --color-heading              : var(--color-yellow-bright);
-    --color-page-heading         : var(--color-cyan);
-    --color-accent               : var(--color-blue-bright);
-    --color-link                 : var(--color-green);
-    --color-link-hover           : var(--color-green);
-    --color-link-visited         : var(--color-green);
-    --color-link-active-text     : var(--color-black);
+    --color-background              : var(--color-black);
+    --color-panel-background        : var(--color-black);
+    --color-panel-border            : var(--color-cyan);
+    --color-status                  : var(--color-red);
+    --color-text                    : var(--color-grey);
+    --color-text-muted              : var(--color-grey-dark);
+    --color-text-bright             : var(--color-white);
+    --color-text-selected           : var(--color-black);
+    --color-text-selected-bg        : var(--color-green);
+    --color-highlight-text          : var(--color-black);
+    --color-highlight-bg            : var(--color-yellow-bright);
+    --color-heading                 : var(--color-yellow-bright);
+    --color-page-heading            : var(--color-cyan);
+    --color-accent                  : var(--color-blue-bright);
+    --color-link                    : var(--color-green);
+    --color-link-hover              : var(--color-green);
+    --color-link-visited            : var(--color-green);
+    --color-link-active-text        : var(--color-black);
 
-    --color-text-box-bg          : var(--color-12bit-grey-4);
+    --color-text-box-bg             : var(--color-12bit-grey-4);
 
-    --command-bar-background     : var(--color-cyan);
-    --command-bar-text           : var(--color-black);
-    --command-bar-active-bg      : var(--color-black);
-    --command-bar-active-text    : var(--color-yellow-bright);
+    --color-table-border            : var(--color-brown);
+    --color-table-cell-text         : var(--color-grey);
 
-    --terminal-background        : var(--color-blue);
-    --terminal-border            : var(--color-grey);
-    --terminal-text              : var(--color-grey);
-    --terminal-heading           : var(--color-black);
-    --terminal-heading-bg        : var(--color-grey);
-    --terminal-prompt            : var(--color-yellow-bright);
-    --terminal-shadow            : var(--color-black);
-    --terminal-scrollbar         : var(--color-grey);
-    --terminal-caret             : var(--color-grey);
+    --color-command-bar-background  : var(--color-cyan);
+    --color-command-bar-text        : var(--color-black);
+    --color-command-bar-active-bg   : var(--color-black);
+    --color-command-bar-active-text : var(--color-yellow-bright);
+
+    --terminal-background           : var(--color-blue);
+    --terminal-border               : var(--color-grey);
+    --terminal-text                 : var(--color-grey);
+    --terminal-heading              : var(--color-black);
+    --terminal-heading-bg           : var(--color-grey);
+    --terminal-prompt               : var(--color-yellow-bright);
+    --terminal-shadow               : var(--color-black);
+    --terminal-scrollbar            : var(--color-grey);
+    --terminal-caret                : var(--color-grey);
 
     /* Control colors */
-    --control-face               : #b8b8b8;
-    --control-highlight          : #f0f0f0;
-    --control-shadow             : #505050;
-    --control-ink                : #000000;
-    --control-heading            : var(--color-blue);
-    --control-invalid-text       : var(--color-red);
-    --control-field              : var(--color-background);
-    --control-field-text         : var(--color-text);
-    --control-track              : #404040;
+    --control-face                  : #b8b8b8;
+    --control-highlight             : #f0f0f0;
+    --control-shadow                : #505050;
+    --control-ink                   : #000000;
+    --control-heading               : var(--color-blue);
+    --control-invalid-text          : var(--color-red);
+    --control-field                 : var(--color-background);
+    --control-field-text            : var(--color-text);
+    --control-track                 : #404040;
 
-    --control-list-field         : #f0f0f0;
-    --control-disabled-highlight : #d0d0d0;
-    --control-disabled-shadow    : #929292;
-    --control-disabled-ink       : #808080;
+    --control-list-field            : #f0f0f0;
+    --control-disabled-highlight    : #d0d0d0;
+    --control-disabled-shadow       : #929292;
+    --control-disabled-ink          : #808080;
 }

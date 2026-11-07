@@ -10,11 +10,15 @@
     margin-block-start : 32px;
 }
 
+.tools-panel .text-box {
+    background-color : var(--color-background);
+}
+
 .tools-list {
     inline-size  : 100%;
     table-layout : fixed;
     text-align   : start;
-    border       : 2px solid var(--color-grey-dark);
+    border       : 2px solid var(--color-table-border);
 
 }
 
@@ -32,12 +36,12 @@
 }
 
 .tools-list tr + tr {
-    border-block-start : 2px solid var(--color-grey-dark);
+    border-block-start : 2px solid var(--color-table-border);
 }
 
-/*td p {*/
-/*    color : var(--color-cyan);*/
-/*}*/
+td p {
+    color : var(--color-table-cell-text);
+}
 
 @media (max-width : 700px) {
     .tools-list,
