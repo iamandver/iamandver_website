@@ -41,9 +41,52 @@
     color : var(--color-text-bright);
 }
 
-.game-status {
+.game-instructions {
     text-align : center;
     color      : var(--color-text-muted);
+}
+
+.game-board-area {
+    position : relative;
+}
+
+.game-status {
+    position          : absolute;
+    inset-inline      : 32px;
+    inset-block-start : 50%;
+    transform         : translateY(-50%);
+    z-index           : 1;
+    padding           : 12px 16px;
+    border            : 3px double currentColor;
+    background        : var(--color-panel-background);
+    text-align        : center;
+    box-shadow        : 16px 16px 0 var(--color-black);
+
+}
+
+.game-status[data-state="won"] {
+    color : var(--color-yellow-bright);
+}
+
+.game-status[data-state="lost"] {
+    color : var(--color-red-bright);
+}
+
+.game-status .game-message {
+    font-size   : 24px;
+    line-height : 1.2;
+}
+
+.game-status > p + p {
+    margin-block-start : 8px;
+}
+
+.game-final-score {
+    color : var(--color-text-bright);
+}
+
+.game-record {
+    color : var(--color-yellow-bright);
 }
 
 .game-board {
@@ -67,17 +110,17 @@
 }
 
 .game-board td[data-color-group="low"] {
-    background-color : var(--color-blue-bright);
+    background-color : var(--color-grey-dark);
     color            : var(--color-text-bright);
 }
 
 .game-board td[data-color-group="medium"] {
-    background-color : var(--color-cyan);
+    background-color : var(--color-grey);
     color            : var(--color-black);
 }
 
 .game-board td[data-color-group="high"] {
-    background-color : var(--color-magenta);
+    background-color : var(--color-brown);
     color            : var(--color-text-bright);
 }
 

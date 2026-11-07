@@ -32,36 +32,44 @@
                     <span>Best <output id="best-score">0</output></span>
                 </div>
 
-                <table class="game-board">
-                    <tbody>
-                    <tr>
-                        <td id="cell-0-0"></td>
-                        <td id="cell-0-1"></td>
-                        <td id="cell-0-2"></td>
-                        <td id="cell-0-3"></td>
-                    </tr>
-                    <tr>
-                        <td id="cell-1-0"></td>
-                        <td id="cell-1-1"></td>
-                        <td id="cell-1-2"></td>
-                        <td id="cell-1-3"></td>
-                    </tr>
-                    <tr>
-                        <td id="cell-2-0"></td>
-                        <td id="cell-2-1"></td>
-                        <td id="cell-2-2"></td>
-                        <td id="cell-2-3"></td>
-                    </tr>
-                    <tr>
-                        <td id="cell-3-0"></td>
-                        <td id="cell-3-1"></td>
-                        <td id="cell-3-2"></td>
-                        <td id="cell-3-3"></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="game-board-area">
+                    <table class="game-board">
+                        <tbody>
+                        <tr>
+                            <td id="cell-0-0"></td>
+                            <td id="cell-0-1"></td>
+                            <td id="cell-0-2"></td>
+                            <td id="cell-0-3"></td>
+                        </tr>
+                        <tr>
+                            <td id="cell-1-0"></td>
+                            <td id="cell-1-1"></td>
+                            <td id="cell-1-2"></td>
+                            <td id="cell-1-3"></td>
+                        </tr>
+                        <tr>
+                            <td id="cell-2-0"></td>
+                            <td id="cell-2-1"></td>
+                            <td id="cell-2-2"></td>
+                            <td id="cell-2-3"></td>
+                        </tr>
+                        <tr>
+                            <td id="cell-3-0"></td>
+                            <td id="cell-3-1"></td>
+                            <td id="cell-3-2"></td>
+                            <td id="cell-3-3"></td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-                <p id="game-status" class="game-status">Swipe or use arrow keys.</p>
+                    <div id="game-status" class="game-status" data-state="playing" hidden>
+                        <p id="game-message" class="game-message"></p>
+                        <p id="game-final-score" class="game-final-score" hidden></p>
+                        <p id="game-new-record" class="game-record" hidden>New personal best!</p>
+                    </div>
+                </div>
+
+                <p id="game-instructions" class="game-instructions">Swipe or use arrow keys.</p>
             </section>
 
         </div>

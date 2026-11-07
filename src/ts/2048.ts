@@ -11,15 +11,20 @@ window.addEventListener("DOMContentLoaded", init);
 
 function init(): void
 {
-    let game    = new Game2048();
-    let records = loadScoreRecords();
+    let game      = new Game2048();
+    let records   = loadScoreRecords();
+    let isNewBest = false;
 
-    const scoreElement     = document.getElementById("game-score")!;
-    const lastScoreElement = document.getElementById("last-score")!;
-    const bestScoreElement = document.getElementById("best-score")!;
-    const statusElement    = document.getElementById("game-status")!;
-    const newGameButton    = document.getElementById("new-game")!;
-    const boardElement     = document.querySelector<HTMLTableElement>(".game-board")!;
+    const scoreElement        = document.getElementById("game-score")!;
+    const lastScoreElement    = document.getElementById("last-score")!;
+    const bestScoreElement    = document.getElementById("best-score")!;
+    const statusElement       = document.getElementById("game-status")!;
+    const instructionsElement = document.getElementById("game-instructions")!;
+    const messageElement      = document.getElementById("game-message")!;
+    const finalScoreElement   = document.getElementById("game-final-score")!;
+    const newRecordElement    = document.getElementById("game-new-record")!;
+    const newGameButton       = document.getElementById("new-game")!;
+    const boardElement        = document.querySelector<HTMLTableElement>(".game-board")!;
 
     const cellElements = game.cells.map((rowCells, row) =>
                                             rowCells.map((_, column) =>
@@ -27,11 +32,19 @@ function init(): void
 
     function render(): void
     {
-        scoreElement.textContent     = String(game.score);
-        lastScoreElement.textContent = records.last === null ? "—" : String(records.last);
-        bestScoreElement.textContent = String(records.best);
-        statusElement.textContent    = game.status === "won" ? "You reached 2048!" :
-                                       game.status === "lost" ? "No moves left." : "Swipe or use arrow keys.";
+        scoreElement.textContent             = String(game.score);
+        lastScoreElement.textContent         = records.last === null ? "—" : String(records.last);
+        bestScoreElement.textContent         = String(records.best);
+        statusElement.dataset.state          = game.status;
+        statusElement.hidden                 = game.status === "playing";
+        messageElement.textContent           = game.status === "won" ? "You have reached 2048!" :
+                                               "No moves left.";
+        // Keep the instructions' space reserved so the board stays in place.
+        instructionsElement.style.visibility = game.status === "playing" ? "visible" : "hidden";
+        finalScoreElement.hidden             = game.status === "playing";
+        finalScoreElement.textContent        = `Final score: ${game.score}`;
+        newRecordElement.hidden              = !isNewBest;
+        newGameButton.textContent            = game.status === "playing" ? "New game" : "Play again";
 
         for (const [row, rowCells] of game.cells.entries())
         {
@@ -75,7 +88,8 @@ function init(): void
         // Save only the transition from playing to a completed game.
         if (game.status !== "playing")
         {
-            records = { last: game.score, best: Math.max(records.best, game.score) };
+            isNewBest = game.score > records.best;
+            records   = { last: game.score, best: Math.max(records.best, game.score) };
             try
             {
                 localStorage.setItem(scoreStorageKey, JSON.stringify(records));
@@ -143,7 +157,7 @@ function init(): void
 
         const deltaX = event.clientX - swipeStart.x;
         const deltaY = event.clientY - swipeStart.y;
-        swipeStart = undefined;
+        swipeStart   = undefined;
 
         // Ignore taps and small movements. The dominant axis determines the move.
         if (Math.max(Math.abs(deltaX), Math.abs(deltaY)) < 24 || isTerminalOpen())
@@ -152,8 +166,8 @@ function init(): void
         }
 
         const direction: Direction = Math.abs(deltaX) > Math.abs(deltaY)
-            ? (deltaX > 0 ? "right" : "left")
-            : (deltaY > 0 ? "down" : "up");
+                                     ? (deltaX > 0 ? "right" : "left")
+                                     : (deltaY > 0 ? "down" : "up");
         takeTurn(direction);
     });
 
@@ -170,7 +184,8 @@ function init(): void
     newGameButton.addEventListener("click", () =>
     {
         swipeStart = undefined;
-        game = new Game2048();
+        game       = new Game2048();
+        isNewBest  = false;
         render();
     });
 
