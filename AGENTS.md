@@ -8,6 +8,7 @@
 # Implementation preferences
 
 - Favor plain HTML, CSS, and small amounts of TypeScript within the existing Vite project. Keep architecture proportional to the site.
+- Keep verification lightweight: use the existing build and focused browser checks. Do not add automated test files, test scripts, or test infrastructure unless explicitly requested.
 - Run features in the visitor's browser. Use GitHub Pages for hosting; introduce a backend only when a concrete requirement needs one, after discussion.
 - Use `localStorage` for local preferences and Easter egg progress. Keep saved state small and versioned; no accounts or server synchronization by default.
 - No cookies, analytics, marketing, third-party tracking, or consent banners by default. Prefer locally hosted assets.

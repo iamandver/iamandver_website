@@ -1,0 +1,34 @@
+html {
+    overscroll-behavior : none;
+}
+
+body {
+    touch-action : none;
+}
+
+/* The terminal may scroll while the game remains a gesture surface. */
+body:has(.terminal:not([hidden])) {
+    touch-action : auto;
+}
+
+.game-page {
+    min-block-size      : calc(100dvh - var(--controls-bar-height));
+    display             : flex;
+    flex-direction      : column;
+    touch-action        : none;
+    -webkit-user-select : none;
+    user-select         : none;
+}
+
+.game-layout {
+    flex           : 1;
+    display        : flex;
+    flex-direction : column;
+}
+
+.game-container {
+    min-inline-size : 0;
+    flex            : 1;
+    display         : grid;
+    place-items     : center;
+}

@@ -1,4 +1,6 @@
 import "./common.ts";
+import { initGameControls }                  from "./game_controls.ts";
+import { RobotGame }                         from "./robot_game.ts";
 import { firstRoom }                         from "./robot_levels.ts";
 import { spriteSheetUrl, sprites, tileSize } from "./robot_sprites.ts";
 
@@ -13,9 +15,9 @@ async function init(): Promise<void>
 
     try
     {
-        const rows    = parseRoom(firstRoom.map);
-        canvas.width  = rows[0]!.length * tileSize;
-        canvas.height = rows.length * tileSize;
+        const game    = new RobotGame(firstRoom.map);
+        canvas.width  = game.rows[0]!.length * tileSize;
+        canvas.height = game.rows.length * tileSize;
 
         canvas.style.setProperty("--room-width", String(canvas.width));
         canvas.style.setProperty("--room-height", String(canvas.height));
@@ -41,53 +43,30 @@ async function init(): Promise<void>
                               column * tileSize, row * tileSize, tileSize, tileSize);
         };
 
-        for (const [row, cells] of rows.entries())
+        const render = () =>
         {
-            for (const [column, cell] of Array.from(cells).entries())
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            for (const [row, cells] of game.rows.entries())
             {
-                drawSprite(cell === "#" ? "wall" : "floor", column, row);
-                if (cell === "@")
+                for (const [column, cell] of Array.from(cells).entries())
                 {
-                    drawSprite("robot", column, row);
+                    drawSprite(cell === "#" ? "wall" : "floor", column, row);
                 }
             }
-        }
+            drawSprite("robot", game.robot.column, game.robot.row);
+        };
+
+        render();
+        initGameControls(direction =>
+                         {
+                             if (game.move(direction))
+                             {
+                                 render();
+                             }
+                         });
     } catch (error)
     {
         document.getElementById("robot-instructions")!.textContent = "The room could not be loaded.";
         console.error(error);
     }
-}
-
-function parseRoom(map: string): string[]
-{
-    const rows  = map.trim().split("\n").map(row => row.trim());
-    const width = rows[0]!.length;
-    if (width === 0 || rows.some(row => row.length !== width))
-    {
-        throw new Error("Room rows must be non-empty and have equal lengths.");
-    }
-
-    let robotCount = 0;
-    for (const row of rows)
-    {
-        for (const cell of row)
-        {
-            if (!"#.@".includes(cell))
-            {
-                throw new Error(`Unknown room symbol: ${cell}`);
-            }
-            if (cell === "@")
-            {
-                robotCount++;
-            }
-        }
-    }
-
-    if (robotCount !== 1)
-    {
-        throw new Error("A room must contain exactly one robot start (@).");
-    }
-
-    return rows;
 }

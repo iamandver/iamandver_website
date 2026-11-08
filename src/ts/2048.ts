@@ -1,7 +1,6 @@
 import "./common.ts";
-import { isTerminalOpen } from "./terminal.ts";
+import { initGameControls, type Direction } from "./game_controls.ts";
 
-type Direction = "up" | "down" | "left" | "right";
 type GameResult = "won" | "lost";
 type ScoreRecords = { last: number | null; best: number };
 
@@ -24,7 +23,6 @@ function init(): void
     const finalScoreElement   = document.getElementById("game-final-score")!;
     const newRecordElement    = document.getElementById("game-new-record")!;
     const newGameButton       = document.getElementById("new-game")!;
-    const gestureSurface      = document.body;
 
     const cellElements = game.cells.map((rowCells, row) =>
                                             rowCells.map((_, column) =>
@@ -102,90 +100,11 @@ function init(): void
         render();
     }
 
-    const directions: Partial<Record<string, Direction>> = {
-        ArrowUp   : "up",
-        ArrowDown : "down",
-        ArrowLeft : "left",
-        ArrowRight: "right"
-    };
-
-    document.addEventListener("keydown", event =>
-    {
-        const direction = directions[event.key];
-        if (!direction
-            || event.defaultPrevented
-            || isTerminalOpen()
-            || event.altKey
-            || event.ctrlKey
-            || event.metaKey)
-        {
-            return;
-        }
-
-        event.preventDefault();
-        if (!event.repeat)
-        {
-            takeTurn(direction);
-        }
-    });
-
-    let swipeStart: { pointerId: number; x: number; y: number } | undefined;
-
-    gestureSurface.addEventListener("pointerdown", event =>
-    {
-        if (!event.isPrimary)
-        {
-            swipeStart = undefined;
-            return;
-        }
-
-        const target = event.target;
-        if (event.button !== 0 || isTerminalOpen() || game.status !== "playing" ||
-            (target instanceof Element && target.closest("a, button, input, select, textarea, [contenteditable], .controls")))
-        {
-            return;
-        }
-
-        swipeStart = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
-        gestureSurface.setPointerCapture(event.pointerId);
-    });
-
-    gestureSurface.addEventListener("pointerup", event =>
-    {
-        if (swipeStart?.pointerId !== event.pointerId)
-        {
-            return;
-        }
-
-        const deltaX = event.clientX - swipeStart.x;
-        const deltaY = event.clientY - swipeStart.y;
-        swipeStart   = undefined;
-
-        // Ignore taps and small movements. The dominant axis determines the move.
-        if (Math.max(Math.abs(deltaX), Math.abs(deltaY)) < 24 || isTerminalOpen())
-        {
-            return;
-        }
-
-        const direction: Direction = Math.abs(deltaX) > Math.abs(deltaY)
-                                     ? (deltaX > 0 ? "right" : "left")
-                                     : (deltaY > 0 ? "down" : "up");
-        takeTurn(direction);
-    });
-
-    const cancelSwipe = (event: PointerEvent) =>
-    {
-        if (swipeStart?.pointerId === event.pointerId)
-        {
-            swipeStart = undefined;
-        }
-    };
-    gestureSurface.addEventListener("pointercancel", cancelSwipe);
-    gestureSurface.addEventListener("lostpointercapture", cancelSwipe);
+    const resetControls = initGameControls(takeTurn, () => game.status === "playing");
 
     newGameButton.addEventListener("click", () =>
     {
-        swipeStart = undefined;
+        resetControls();
         game       = new Game2048();
         isNewBest  = false;
         render();
