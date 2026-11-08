@@ -60,9 +60,13 @@
     .robot-game {
         --art-pixel : 2px;
     }
+
+    .page {
+        padding-inline : 0;
+    }
 }
 
-@media (max-width : 420px), (max-height : 640px) {
+@media (max-width : 400px), (max-height : 640px) {
     .robot-game {
         --art-pixel : 1px;
     }
