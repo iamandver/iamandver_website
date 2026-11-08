@@ -1,8 +1,11 @@
 import "./common.ts";
-import { initGameControls }                  from "./game_controls.ts";
-import { RobotGame }                         from "./robot_game.ts";
-import { firstRoom, roomSymbols }            from "./robot_levels.ts";
+import { initGameControls }                 from "./game_controls.ts";
+import { RobotGame }                        from "./robot_game.ts";
+import { getOrderedRooms, roomSymbols }     from "./robot_levels.ts";
+import type { RoomDefinition }              from "./robot_levels.ts";
 import { spriteSheetUrl, sprites, tileSize } from "./robot_sprites.ts";
+
+const progressStorageKey = "robot-progress-v1";
 
 window.addEventListener("DOMContentLoaded", () =>
 {
@@ -15,14 +18,8 @@ async function init(): Promise<void>
 
     try
     {
-        let game      = new RobotGame(firstRoom.map);
-        canvas.width  = game.rows[0]!.length * tileSize;
-        canvas.height = game.rows.length * tileSize;
-
-        canvas.style.setProperty("--room-width", String(canvas.width));
-        canvas.style.setProperty("--room-height", String(canvas.height));
-        document.getElementById("robot-room-title")!.textContent = `Level ${firstRoom.world}-${firstRoom.level} ${firstRoom.name}`;
-
+        const rooms   = getOrderedRooms();
+        let roomIndex = loadRoomIndex(rooms);
         const context = canvas.getContext("2d");
         if (!context)
         {
@@ -33,8 +30,23 @@ async function init(): Promise<void>
         sheet.src   = spriteSheetUrl;
         await sheet.decode();
 
-        context.imageSmoothingEnabled = false;
-        const instructions            = document.getElementById("robot-instructions")!;
+        const instructions = document.getElementById("robot-instructions")!;
+
+        const loadRoom = (): RobotGame =>
+        {
+            const room    = rooms[roomIndex]!;
+            const game    = new RobotGame(room.map);
+            canvas.width  = game.rows[0]!.length * tileSize;
+            canvas.height = game.rows.length * tileSize;
+            canvas.style.setProperty("--room-width", String(canvas.width));
+            canvas.style.setProperty("--room-height", String(canvas.height));
+            context.imageSmoothingEnabled = false;
+            document.getElementById("robot-room-title")!.textContent = `Level ${room.level} · Room ${room.room} · ${room.name}`;
+            saveRoomCheckpoint(room);
+            return game;
+        };
+
+        let game = loadRoom();
 
         const drawSprite = (name: keyof typeof sprites,
                             column: number,
@@ -88,7 +100,7 @@ async function init(): Promise<void>
             }
             else if (game.status === "complete")
             {
-                instructions.textContent = "Ship parts recovered!\nRoom complete. Restart to replay.";
+                instructions.textContent = "All rooms complete!\nRestart to replay this room.";
             }
             else
             {
@@ -104,6 +116,12 @@ async function init(): Promise<void>
                                                {
                                                    if (game.move(direction))
                                                    {
+                                                       if (game.status === "complete" && roomIndex + 1 < rooms.length)
+                                                       {
+                                                           resetControls();
+                                                           roomIndex++;
+                                                           game = loadRoom();
+                                                       }
                                                        render();
                                                    }
                                                }, () => game.status === "playing");
@@ -113,12 +131,45 @@ async function init(): Promise<void>
         restartButton.addEventListener("click", () =>
         {
             resetControls();
-            game = new RobotGame(firstRoom.map);
+            game = loadRoom();
             render();
         });
     } catch (error)
     {
         document.getElementById("robot-instructions")!.textContent = "The room could not be loaded.";
         console.error(error);
+    }
+}
+
+function loadRoomIndex(rooms: readonly RoomDefinition[]): number
+{
+    try
+    {
+        const saved = localStorage.getItem(progressStorageKey);
+        if (saved !== null)
+        {
+            const checkpoint = JSON.parse(saved) as Pick<RoomDefinition, "level" | "room">;
+            const index = rooms.findIndex(room => room.level === checkpoint.level && room.room === checkpoint.room);
+            if (index !== -1)
+            {
+                return index;
+            }
+        }
+    } catch
+    {
+        // Start at the first room if storage is unavailable or invalid.
+    }
+
+    return 0;
+}
+
+function saveRoomCheckpoint(room: RoomDefinition): void
+{
+    try
+    {
+        localStorage.setItem(progressStorageKey, JSON.stringify({ level: room.level, room: room.room }));
+    } catch
+    {
+        // Progression still works for this visit when storage is unavailable.
     }
 }
