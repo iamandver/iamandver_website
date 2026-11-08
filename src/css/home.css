@@ -1,3 +1,11 @@
+.main-title {
+    margin-block   : 32px;
+    padding-inline : 8px;
+    display        : flex;
+    flex-direction : column;
+    gap            : 16px;
+}
+
 .home-layout {
     display               : grid;
     grid-template-columns : 160px minmax(0, 1fr) 160px;

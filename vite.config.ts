@@ -6,6 +6,7 @@ export default defineConfig({
                                     "index.html",
                                     "braille.html",
                                     "2048.html",
+                                    "robot.html",
                                     "about_me.html",
                                     "tools_and_credits.html",
                                     "legal_crap.html"

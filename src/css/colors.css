@@ -57,7 +57,7 @@
     /* use these colors in code ONLY so they have a layer of abstraction */
     --color-background              : var(--color-black);
     --color-panel-background        : var(--color-black);
-    --color-panel-border            : var(--color-cyan);
+    --color-panel-border            : var(--color-brown);
     --color-status                  : var(--color-red);
     --color-text                    : var(--color-grey);
     --color-text-muted              : var(--color-grey-dark);
@@ -76,7 +76,7 @@
 
     --color-text-box-bg             : var(--color-12bit-grey-4);
 
-    --color-table-border            : var(--color-brown);
+    --color-table-border            : var(--color-grey-dark);
     --color-table-cell-text         : var(--color-grey);
 
     --color-command-bar-background  : var(--color-cyan);

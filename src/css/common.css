@@ -71,6 +71,7 @@ ul {
         content  : "*";
         position : absolute;
         left     : calc(var(--padding-left) * -1);
+        color      : var(--color-red-bright);
     }
 }
 
@@ -177,5 +178,5 @@ ul {
 .copyright {
     text-align   : center;
     margin-block : 16px;
-    color        : var(--color-brown);
+    color        : var(--color-blue-bright);
 }
