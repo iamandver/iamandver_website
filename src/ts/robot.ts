@@ -1,11 +1,9 @@
 import "./common.ts";
-import { initGameControls }                 from "./game_controls.ts";
-import { RobotGame }                        from "./robot_game.ts";
-import { getOrderedRooms, roomSymbols }     from "./robot_levels.ts";
-import type { RoomDefinition }              from "./robot_levels.ts";
+import { initGameControls }                  from "./game_controls.ts";
+import { RobotGame }                         from "./robot_game.ts";
+import { getOrderedRooms, roomSymbols }      from "./robot_levels.ts";
+import { clearRoomCheckpoint, loadRoomIndex, saveRoomCheckpoint } from "./robot_progress.ts";
 import { spriteSheetUrl, sprites, tileSize } from "./robot_sprites.ts";
-
-const progressStorageKey = "robot-progress-v1";
 
 window.addEventListener("DOMContentLoaded", () =>
 {
@@ -15,11 +13,28 @@ window.addEventListener("DOMContentLoaded", () =>
 async function init(): Promise<void>
 {
     const canvas = document.querySelector<HTMLCanvasElement>("#robot-board")!;
+    const resetButton = document.querySelector<HTMLButtonElement>("#robot-reset")!;
+    resetButton.addEventListener("click", () =>
+    {
+        clearRoomCheckpoint();
+        window.location.assign(`${import.meta.env.BASE_URL}robot.html`);
+    });
+    resetButton.disabled = false;
 
     try
     {
         const rooms   = getOrderedRooms();
-        let roomIndex = loadRoomIndex(rooms);
+        const url     = new URL(window.location.href);
+        const practiceRoom = url.searchParams.get("room");
+        const practice = practiceRoom !== null;
+        let roomIndex = practice
+                        ? rooms.findIndex(room => `${room.level}-${room.room}` === practiceRoom)
+                        : loadRoomIndex(rooms);
+        if (roomIndex === -1)
+        {
+            throw new Error(`Practice room ${practiceRoom} not found.\nUse robot resume in the terminal to return to saved progress.`);
+        }
+
         const context = canvas.getContext("2d");
         if (!context)
         {
@@ -40,9 +55,17 @@ async function init(): Promise<void>
             canvas.height = game.rows.length * tileSize;
             canvas.style.setProperty("--room-width", String(canvas.width));
             canvas.style.setProperty("--room-height", String(canvas.height));
-            context.imageSmoothingEnabled = false;
-            document.getElementById("robot-room-title")!.textContent = `Level ${room.level} · Room ${room.room} · ${room.name}`;
-            saveRoomCheckpoint(room);
+            context.imageSmoothingEnabled                            = false;
+            document.getElementById("robot-room-title")!.textContent = `${practice ? "Practice · " : ""}Level ${room.level} · Room ${room.room} · ${room.name}`;
+            if (practice)
+            {
+                url.searchParams.set("room", `${room.level}-${room.room}`);
+                window.history.replaceState(null, "", url);
+            }
+            else
+            {
+                saveRoomCheckpoint(room);
+            }
             return game;
         };
 
@@ -136,40 +159,7 @@ async function init(): Promise<void>
         });
     } catch (error)
     {
-        document.getElementById("robot-instructions")!.textContent = "The room could not be loaded.";
+        document.getElementById("robot-instructions")!.textContent = error instanceof Error ? error.message : "The room could not be loaded.";
         console.error(error);
-    }
-}
-
-function loadRoomIndex(rooms: readonly RoomDefinition[]): number
-{
-    try
-    {
-        const saved = localStorage.getItem(progressStorageKey);
-        if (saved !== null)
-        {
-            const checkpoint = JSON.parse(saved) as Pick<RoomDefinition, "level" | "room">;
-            const index = rooms.findIndex(room => room.level === checkpoint.level && room.room === checkpoint.room);
-            if (index !== -1)
-            {
-                return index;
-            }
-        }
-    } catch
-    {
-        // Start at the first room if storage is unavailable or invalid.
-    }
-
-    return 0;
-}
-
-function saveRoomCheckpoint(room: RoomDefinition): void
-{
-    try
-    {
-        localStorage.setItem(progressStorageKey, JSON.stringify({ level: room.level, room: room.room }));
-    } catch
-    {
-        // Progression still works for this visit when storage is unavailable.
     }
 }

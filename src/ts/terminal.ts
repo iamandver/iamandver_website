@@ -1,3 +1,6 @@
+import { rooms } from "./robot_levels.ts";
+import { clearRoomCheckpoint } from "./robot_progress.ts";
+
 type TerminalState = {
     open: boolean;
     input: string;
@@ -100,7 +103,8 @@ export function initTerminal(): void
         }
 
         write(`andver> ${command}`, "terminal-command");
-        switch (command.toLowerCase())
+        const parts = command.toLowerCase().split(/\s+/);
+        switch (parts[0])
         {
             /*
              * possible commands:
@@ -110,6 +114,10 @@ export function initTerminal(): void
                 write(
                     "home     return home\n" +
                     "braille  open the image converter\n" +
+                    "robot    open Robot\n" +
+                    "robot goto <level> <room>  practice a room\n" +
+                    "robot resume  return to saved progress\n" +
+                    "robot reset   clear Robot progress and start over\n" +
                     "clear    clear the terminal\n" +
                     "close    close this window");
                 break;
@@ -122,6 +130,35 @@ export function initTerminal(): void
             case "2048":
                 window.location.assign(`${import.meta.env.BASE_URL}2048.html`);
                 break;
+
+            case "robot":
+            {
+                const [, action, level, room] = parts;
+                let target = `${import.meta.env.BASE_URL}robot.html`;
+                if (action === "goto" && parts.length === 4)
+                {
+                    if (!/^\d+$/.test(level!) || !/^\d+$/.test(room!) ||
+                        !rooms.some(candidate => candidate.level === Number(level) && candidate.room === Number(room)))
+                    {
+                        write(`Room ${level}-${room} not found.`);
+                        break;
+                    }
+                    target += `?room=${Number(level)}-${Number(room)}`;
+                }
+                else if (action === "reset" && parts.length === 2)
+                {
+                    clearRoomCheckpoint();
+                }
+                else if (!(parts.length === 1 || (action === "resume" && parts.length === 2)))
+                {
+                    write("Usage: robot | robot goto <level> <room> | robot resume | robot reset");
+                    break;
+                }
+
+                close();
+                window.location.assign(target);
+                break;
+            }
 
             case "clear":
                 transcript.replaceChildren();
