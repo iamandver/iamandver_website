@@ -9,7 +9,7 @@
     --page-padding      : 16px;
 
     /* One source-art pixel occupies two CSS pixels. */
-    --art-pixel         : 2px;
+    --art-pixel         : 4px;
 }
 
 body {

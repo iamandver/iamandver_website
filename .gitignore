@@ -14,6 +14,9 @@ dist-ssr
 
 # Keep the asset library local, except for assets used by the site and their licenses.
 /src/assets/**
+!/src/assets/game_assets/
+!/src/assets/game_assets/art/
+!/src/assets/game_assets/art/robot_sprite_sheet.png
 !/src/assets/img/
 !/src/assets/img/braille-preview.svg
 !/src/assets/fonts/

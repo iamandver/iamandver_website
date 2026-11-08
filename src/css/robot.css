@@ -1,4 +1,7 @@
 .robot-page {
+    --room-width   : 192px;
+    --room-height  : 160px;
+
     min-block-size : calc(100dvh - var(--controls-bar-height));
     display        : flex;
     flex-direction : column;
@@ -39,8 +42,8 @@
 
 #robot-board {
     display          : block;
-    inline-size      : calc(192 * var(--art-pixel));
-    block-size       : calc(160 * var(--art-pixel));
+    inline-size      : calc(var(--room-width, 192) * var(--art-pixel));
+    block-size       : calc(var(--room-height, 160) * var(--art-pixel));
     background-color : var(--color-text-box-bg);
     image-rendering  : pixelated;
 }
@@ -50,6 +53,18 @@
 }
 
 /* Keep source pixels at a whole-number scale on narrow screens. */
+@media (max-width : 880px) {
+    .robot-game {
+        --art-pixel : 3px;
+    }
+}
+
+@media (max-width : 640px) {
+    .robot-game {
+        --art-pixel : 2px;
+    }
+}
+
 @media (max-width : 430px) {
     .robot-game {
         --art-pixel : 1px;
