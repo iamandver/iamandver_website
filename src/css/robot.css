@@ -49,7 +49,7 @@
     text-align : center;
 }
 
-/* Keep source pixels at a whole-number scale on narrow screens. */
+/* Use whole-number scales except for the full-width phone layout below. */
 @media (max-width : 880px), (max-height : 960px) {
     .robot-game {
         --art-pixel : 3px;
@@ -60,13 +60,9 @@
     .robot-game {
         --art-pixel : 2px;
     }
-
-    .page {
-        padding-inline : 0;
-    }
 }
 
-@media (max-width : 400px), (max-height : 640px) {
+@media (max-width : 420px), (max-height : 640px) {
     .robot-game {
         --art-pixel : 1px;
     }
@@ -96,5 +92,33 @@
         display         : flex;
         align-items     : center;
         justify-content : space-between;
+    }
+}
+
+@media (max-width : 420px) {
+    .game-page {
+        padding-inline : 8px;
+    }
+
+    .robot-container {
+        padding-block : 4px;
+    }
+
+    .robot-game {
+        inline-size     : 100%;
+        max-inline-size : none;
+    }
+
+    .robot-heading {
+        padding-inline : var(--page-padding);
+    }
+
+    .robot-board-frame {
+        justify-self : stretch;
+    }
+
+    #robot-board {
+        inline-size : 100%;
+        block-size  : auto;
     }
 }
