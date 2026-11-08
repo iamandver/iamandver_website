@@ -46,7 +46,18 @@
 }
 
 .robot-instructions {
-    text-align : center;
+    min-block-size : 2.4em;
+    text-align     : center;
+    white-space    : pre-line;
+    line-height    : 1.2;
+}
+
+.robot-instructions[data-state="caught"] {
+    color : var(--color-red-bright);
+}
+
+.robot-instructions[data-state="complete"] {
+    color : var(--color-green);
 }
 
 /* Use whole-number scales except for the full-width phone layout below. */
@@ -107,6 +118,7 @@
     .robot-game {
         inline-size     : 100%;
         max-inline-size : none;
+        gap             : 8px;
     }
 
     .robot-heading {
