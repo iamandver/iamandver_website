@@ -15,7 +15,7 @@ async function init(): Promise<void>
 
     try
     {
-        const game    = new RobotGame(firstRoom.map);
+        let game      = new RobotGame(firstRoom.map);
         canvas.width  = game.rows[0]!.length * tileSize;
         canvas.height = game.rows.length * tileSize;
 
@@ -35,17 +35,26 @@ async function init(): Promise<void>
 
         context.imageSmoothingEnabled = false;
 
-        const drawSprite = (name: keyof typeof sprites, column: number, row: number): void =>
+        const drawSprite = (name: keyof typeof sprites,
+                            column: number,
+                            row: number): void =>
         {
             const sprite = sprites[name];
             context.drawImage(sheet,
-                              sprite.column * tileSize, sprite.row * tileSize, tileSize, tileSize,
-                              column * tileSize, row * tileSize, tileSize, tileSize);
+                              sprite.column * tileSize,
+                              sprite.row * tileSize,
+                              tileSize,
+                              tileSize,
+                              column * tileSize,
+                              row * tileSize,
+                              tileSize,
+                              tileSize);
         };
 
         const render = () =>
         {
             context.clearRect(0, 0, canvas.width, canvas.height);
+
             for (const [row, cells] of game.rows.entries())
             {
                 for (const [column, cell] of Array.from(cells).entries())
@@ -53,17 +62,33 @@ async function init(): Promise<void>
                     drawSprite(cell === "#" ? "wall" : "floor", column, row);
                 }
             }
+
+            for (const crate of game.crates)
+            {
+                drawSprite("crate", crate.column, crate.row);
+            }
+
             drawSprite("robot", game.robot.column, game.robot.row);
         };
 
         render();
-        initGameControls(direction =>
-                         {
-                             if (game.move(direction))
-                             {
-                                 render();
-                             }
-                         });
+
+        const resetControls = initGameControls(direction =>
+        {
+            if (game.move(direction))
+            {
+                render();
+            }
+        });
+
+        const restartButton = document.querySelector<HTMLButtonElement>("#robot-restart")!;
+        restartButton.disabled = false;
+        restartButton.addEventListener("click", () =>
+        {
+            resetControls();
+            game = new RobotGame(firstRoom.map);
+            render();
+        });
     } catch (error)
     {
         document.getElementById("robot-instructions")!.textContent = "The room could not be loaded.";

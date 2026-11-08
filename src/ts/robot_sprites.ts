@@ -8,5 +8,6 @@ export const tileSize = 16;
 export const sprites = {
     wall : { column: 0, row: 0 },
     floor: { column: 1, row: 0 },
-    robot: { column: 2, row: 0 }
+    robot: { column: 2, row: 0 },
+    crate: { column: 3, row: 0 }
 };

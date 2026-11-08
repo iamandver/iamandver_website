@@ -1,14 +1,15 @@
 /*
- * wall  : #
- * floor : .
- * robot : @
+ * wall : #
+ * floor: .
+ * robot: @
+ * crate: C
  */
 export const firstRoom = {
     name: "Cargo bay",
     map : `
 ############
 #..........#
-#..##......#
+#..##...C..#
 #..#.......#
 #..#..##...#
 #.....#....#
