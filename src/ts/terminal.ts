@@ -21,7 +21,7 @@ export function initTerminal(): void
     controls.innerHTML = `
         <div class="controls-inner">
             <a class="controls-command" href="${import.meta.env.BASE_URL}">[ Home ]</a>
-            <button class="controls-command terminal-toggle" type="button" aria-controls="terminal" aria-expanded="false">[ Terminal ]</button>
+            <button class="controls-command terminal-toggle" type="button" aria-controls="terminal" aria-expanded="false" title="Open terminal with ~">[ Terminal ]</button>
             <span class="terminal-hint" hidden>ESC Close</span>
         </div>
         <section id="terminal" class="terminal" aria-labelledby="terminal-title" hidden>
@@ -89,6 +89,35 @@ export function initTerminal(): void
         {
             event.preventDefault();
             close();
+            return;
+        }
+
+        const shortcut = event.code === "Backquote" || event.key === "`" || event.key === "~";
+        if (!shortcut || event.defaultPrevented || event.isComposing || event.ctrlKey || event.altKey || event.metaKey)
+        {
+            return;
+        }
+
+        if (!terminal.hidden)
+        {
+            // Holding the opening key must not fill the newly focused command field.
+            if (event.repeat && event.target === input)
+            {
+                event.preventDefault();
+            }
+            return;
+        }
+
+        const target = event.target;
+        if (target instanceof Element && target.closest("input, select, textarea, [contenteditable]"))
+        {
+            return;
+        }
+
+        event.preventDefault();
+        if (!event.repeat)
+        {
+            setOpen(true);
         }
     });
 
