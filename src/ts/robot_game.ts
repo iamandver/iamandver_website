@@ -1,5 +1,5 @@
 import type { Direction } from "./game_controls.ts";
-import { roomSymbols }    from "./robot_levels.ts";
+import { boardSize, roomSymbols } from "./robot_levels.ts";
 
 type Position = Readonly<{ column: number; row: number }>;
 
@@ -194,6 +194,11 @@ function parseRoom(map: string): string[]
     if (width === 0 || rows.some(row => row.length !== width))
     {
         throw new Error("Room rows must be non-empty and have equal lengths.");
+    }
+
+    if (width > boardSize.columns || rows.length > boardSize.rows)
+    {
+        throw new Error(`Room is ${width}×${rows.length} tiles; maximum size is ${boardSize.columns}×${boardSize.rows}.`);
     }
 
     let robotCount = 0;

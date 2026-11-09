@@ -1,7 +1,7 @@
 import "./common.ts";
 import { initGameControls }                                       from "./game_controls.ts";
 import { RobotGame }                                              from "./robot_game.ts";
-import { getOrderedRooms, type RoomDefinition, roomSymbols }      from "./robot_levels.ts";
+import { boardSize, getOrderedRooms, type RoomDefinition, roomSymbols } from "./robot_levels.ts";
 import { clearRoomCheckpoint, loadRoomIndex, saveRoomCheckpoint } from "./robot_progress.ts";
 import { spriteSheetUrl, sprites, tileSize }                      from "./robot_sprites.ts";
 
@@ -41,6 +41,10 @@ async function init(): Promise<void>
             throw new Error("Canvas 2D is unavailable.");
         }
 
+        canvas.width  = boardSize.columns * tileSize;
+        canvas.height = boardSize.rows * tileSize;
+        context.imageSmoothingEnabled = false;
+
         const sheet = new Image();
         sheet.src   = spriteSheetUrl;
         await sheet.decode();
@@ -51,12 +55,6 @@ async function init(): Promise<void>
         {
             const room    = rooms[roomIndex]!;
             const game    = new RobotGame(room.map);
-            canvas.width  = game.rows[0]!.length * tileSize;
-            canvas.height = game.rows.length * tileSize;
-            canvas.style.setProperty("--room-width", String(canvas.width));
-            canvas.style.setProperty("--room-height", String(canvas.height));
-
-            context.imageSmoothingEnabled                           = false;
             document.getElementById("robot-practice")!.hidden       = !practice;
             document.getElementById("robot-level")!.textContent     = `Level ${room.level}`;
             document.getElementById("robot-room")!.textContent      = `Room ${room.room}`;
@@ -81,13 +79,15 @@ async function init(): Promise<void>
                             row: number): void =>
         {
             const sprite = sprites[name];
+            const offsetColumn = Math.floor((boardSize.columns - game.rows[0]!.length) / 2);
+            const offsetRow = Math.floor((boardSize.rows - game.rows.length) / 2);
             context.drawImage(sheet,
                               sprite.column * tileSize,
                               sprite.row * tileSize,
                               tileSize,
                               tileSize,
-                              column * tileSize,
-                              row * tileSize,
+                              (column + offsetColumn) * tileSize,
+                              (row + offsetRow) * tileSize,
                               tileSize,
                               tileSize);
         };
@@ -139,6 +139,51 @@ async function init(): Promise<void>
         };
 
         render();
+
+        const container = document.querySelector<HTMLElement>(".robot-container")!;
+        const gameElement = document.querySelector<HTMLElement>(".robot-game")!;
+        const heading = document.querySelector<HTMLElement>(".robot-heading")!;
+        const frame = document.querySelector<HTMLElement>(".robot-board-frame")!;
+        const resizeBoard = () =>
+        {
+            const containerStyle = getComputedStyle(container);
+            const gameStyle = getComputedStyle(gameElement);
+            const maxScale = parseFloat(gameStyle.getPropertyValue("--art-pixel"));
+            const borderWidth = frame.offsetWidth - frame.clientWidth;
+            const contentWidth = container.clientWidth
+                                 - parseFloat(containerStyle.paddingLeft) - parseFloat(containerStyle.paddingRight);
+            const contentHeight = container.clientHeight
+                                  - parseFloat(containerStyle.paddingTop) - parseFloat(containerStyle.paddingBottom);
+            const availableHeight = contentHeight - heading.offsetHeight - instructions.offsetHeight
+                                    - parseFloat(gameStyle.rowGap) * 2
+                                    - (frame.offsetHeight - frame.clientHeight);
+            const fit = Math.max(0, Math.min((contentWidth - borderWidth) / canvas.width, availableHeight / canvas.height, maxScale));
+            const scale = window.innerWidth <= 420 || fit < 1 ? fit : Math.floor(fit);
+            gameElement.style.transform = "";
+            canvas.style.inlineSize = `${canvas.width * scale}px`;
+            gameElement.style.inlineSize = `${canvas.width * scale + borderWidth}px`;
+
+            if (fit < 1 || heading.offsetWidth > gameElement.clientWidth)
+            {
+                // Lay out readable controls first, then shrink the whole group together.
+                canvas.style.inlineSize = `${canvas.width}px`;
+                gameElement.style.inlineSize = `${canvas.width + borderWidth}px`;
+                const layoutScale = Math.max(1, Math.ceil((gameElement.scrollWidth - borderWidth) / canvas.width));
+                canvas.style.inlineSize = `${canvas.width * layoutScale}px`;
+                gameElement.style.inlineSize = `${canvas.width * layoutScale + borderWidth}px`;
+                const groupFit = Math.min(contentWidth / gameElement.offsetWidth,
+                                          contentHeight / gameElement.offsetHeight, 1);
+                const canvasFit = Math.min(groupFit * layoutScale, maxScale);
+                const canvasScale = window.innerWidth <= 420 || canvasFit < 1 ? canvasFit : Math.floor(canvasFit);
+                gameElement.style.transform = `scale(${canvasScale / layoutScale})`;
+            }
+        };
+        const boardResizeObserver = new ResizeObserver(resizeBoard);
+        boardResizeObserver.observe(container);
+        boardResizeObserver.observe(heading);
+        boardResizeObserver.observe(instructions);
+        boardResizeObserver.observe(frame, { box: "border-box" });
+        resizeBoard();
 
         const resetControls = initGameControls(direction =>
                                                {

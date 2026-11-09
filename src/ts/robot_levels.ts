@@ -1,3 +1,5 @@
+export const boardSize = { columns: 16, rows: 10 } as const;
+
 export const roomSymbols = {
     wall  : "#",
     floor : ".",

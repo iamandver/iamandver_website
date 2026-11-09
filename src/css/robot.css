@@ -1,10 +1,24 @@
+.game-page {
+    block-size : calc(100dvh - var(--controls-bar-height));
+}
+
+.game-layout {
+    min-block-size : 0;
+}
+
 .robot-container {
-    padding : 16px 0;
+    grid-template-columns : minmax(0, 1fr);
+    grid-template-rows    : minmax(0, 1fr);
+    min-block-size        : 0;
+    overflow              : clip;
+    padding               : 16px 0;
 }
 
 .robot-game {
-    display : grid;
-    gap     : 16px;
+    display         : grid;
+    inline-size     : 100%;
+    min-inline-size : 0;
+    gap             : 16px;
 }
 
 .robot-heading {
@@ -47,18 +61,15 @@
 }
 
 .robot-board-frame {
-    justify-self : center;
-    padding      : 0;
+    justify-self    : center;
+    max-inline-size : 100%;
+    padding         : 0;
 }
 
 #robot-board {
-    --room-width     : 192;
-    --room-height    : 160;
-
     display          : block;
-    inline-size      : calc(var(--room-width) * var(--art-pixel));
-    block-size       : calc(var(--room-height) * var(--art-pixel));
-    background-color : var(--color-text-box-bg);
+    block-size       : auto;
+    background-color : var(--color-black);
     image-rendering  : pixelated;
 }
 
@@ -78,25 +89,6 @@
     color : var(--color-green);
 }
 
-/* Use whole-number scales except for the full-width phone layout below. */
-@media (max-width : 880px), (max-height : 960px) {
-    .robot-game {
-        --art-pixel : 3px;
-    }
-}
-
-@media (max-width : 640px), (max-height : 800px) {
-    .robot-game {
-        --art-pixel : 2px;
-    }
-}
-
-@media (max-width : 420px), (max-height : 640px) {
-    .robot-game {
-        --art-pixel : 1px;
-    }
-}
-
 @media (max-height : 480px) {
     .game-page {
         padding-block : 8px;
@@ -112,15 +104,7 @@
     }
 
     .robot-game {
-        inline-size     : 100%;
-        max-inline-size : 400px;
-        gap             : 8px;
-    }
-
-    .robot-heading {
-        display         : flex;
-        align-items     : center;
-        justify-content : space-between;
+        gap : 8px;
     }
 
     #robot-room-title {
@@ -147,21 +131,6 @@
     }
 
     .robot-game {
-        inline-size     : 100%;
-        max-inline-size : none;
-        gap             : 8px;
-    }
-
-    .robot-heading {
-        padding-inline : var(--page-padding);
-    }
-
-    .robot-board-frame {
-        justify-self : stretch;
-    }
-
-    #robot-board {
-        inline-size : 100%;
-        block-size  : auto;
+        gap : 8px;
     }
 }

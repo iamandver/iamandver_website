@@ -8,7 +8,7 @@
     --max-content-width : 960px;
     --page-padding      : 16px;
 
-    /* One source-art pixel occupies two CSS pixels. */
+    /* Preferred source-art pixel size; games may scale down to fit. */
     --art-pixel         : 4px;
 }
 
