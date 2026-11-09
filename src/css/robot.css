@@ -1,5 +1,6 @@
 .game-page {
-    block-size : calc(100dvh - var(--controls-bar-height));
+    block-size      : calc(100dvh - var(--controls-bar-height));
+    max-inline-size : none;
 }
 
 .game-layout {
@@ -63,7 +64,6 @@
 .robot-board-frame {
     justify-self    : center;
     max-inline-size : 100%;
-    padding         : 0;
 }
 
 #robot-board {
@@ -121,7 +121,7 @@
     }
 }
 
-@media (max-width : 420px) {
+@media (max-width : 550px) {
     .game-page {
         padding-inline : 8px;
     }

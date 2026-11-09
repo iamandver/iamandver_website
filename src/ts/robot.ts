@@ -148,33 +148,39 @@ async function init(): Promise<void>
         {
             const containerStyle = getComputedStyle(container);
             const gameStyle = getComputedStyle(gameElement);
+            const frameStyle = getComputedStyle(frame);
             const maxScale = parseFloat(gameStyle.getPropertyValue("--art-pixel"));
-            const borderWidth = frame.offsetWidth - frame.clientWidth;
+            const frameInsetsWidth = frame.offsetWidth - frame.clientWidth
+                                     + parseFloat(frameStyle.paddingLeft) + parseFloat(frameStyle.paddingRight);
+            const frameInsetsHeight = frame.offsetHeight - frame.clientHeight
+                                      + parseFloat(frameStyle.paddingTop) + parseFloat(frameStyle.paddingBottom);
             const contentWidth = container.clientWidth
                                  - parseFloat(containerStyle.paddingLeft) - parseFloat(containerStyle.paddingRight);
             const contentHeight = container.clientHeight
                                   - parseFloat(containerStyle.paddingTop) - parseFloat(containerStyle.paddingBottom);
             const availableHeight = contentHeight - heading.offsetHeight - instructions.offsetHeight
                                     - parseFloat(gameStyle.rowGap) * 2
-                                    - (frame.offsetHeight - frame.clientHeight);
-            const fit = Math.max(0, Math.min((contentWidth - borderWidth) / canvas.width, availableHeight / canvas.height, maxScale));
-            const scale = window.innerWidth <= 420 || fit < 1 ? fit : Math.floor(fit);
+                                    - frameInsetsHeight;
+            const widthFit = (contentWidth - frameInsetsWidth) / canvas.width;
+            const fluid = window.innerWidth <= 550 || widthFit < 2;
+            const fit = Math.max(0, Math.min(widthFit, availableHeight / canvas.height, maxScale));
+            const scale = fluid || fit < 1 ? fit : Math.floor(fit);
             gameElement.style.transform = "";
             canvas.style.inlineSize = `${canvas.width * scale}px`;
-            gameElement.style.inlineSize = `${canvas.width * scale + borderWidth}px`;
+            gameElement.style.inlineSize = `${canvas.width * scale + frameInsetsWidth}px`;
 
             if (fit < 1 || heading.offsetWidth > gameElement.clientWidth)
             {
                 // Lay out readable controls first, then shrink the whole group together.
                 canvas.style.inlineSize = `${canvas.width}px`;
-                gameElement.style.inlineSize = `${canvas.width + borderWidth}px`;
-                const layoutScale = Math.max(1, Math.ceil((gameElement.scrollWidth - borderWidth) / canvas.width));
+                gameElement.style.inlineSize = `${canvas.width + frameInsetsWidth}px`;
+                const layoutScale = Math.max(1, Math.ceil((gameElement.scrollWidth - frameInsetsWidth) / canvas.width));
                 canvas.style.inlineSize = `${canvas.width * layoutScale}px`;
-                gameElement.style.inlineSize = `${canvas.width * layoutScale + borderWidth}px`;
+                gameElement.style.inlineSize = `${canvas.width * layoutScale + frameInsetsWidth}px`;
                 const groupFit = Math.min(contentWidth / gameElement.offsetWidth,
                                           contentHeight / gameElement.offsetHeight, 1);
                 const canvasFit = Math.min(groupFit * layoutScale, maxScale);
-                const canvasScale = window.innerWidth <= 420 || canvasFit < 1 ? canvasFit : Math.floor(canvasFit);
+                const canvasScale = fluid || canvasFit < 1 ? canvasFit : Math.floor(canvasFit);
                 gameElement.style.transform = `scale(${canvasScale / layoutScale})`;
             }
         };
@@ -183,6 +189,7 @@ async function init(): Promise<void>
         boardResizeObserver.observe(heading);
         boardResizeObserver.observe(instructions);
         boardResizeObserver.observe(frame, { box: "border-box" });
+        boardResizeObserver.observe(canvas);
         resizeBoard();
 
         const resetControls = initGameControls(direction =>
