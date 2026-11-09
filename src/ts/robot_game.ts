@@ -1,7 +1,14 @@
-import type { Direction } from "./game_controls.ts";
+import type { Direction }         from "./game_controls.ts";
 import { boardSize, roomSymbols } from "./robot_levels.ts";
 
-type Position = Readonly<{ column: number; row: number }>;
+export type Position = Readonly<{ column: number; row: number }>;
+
+export type RobotMove = Readonly<{
+    direction: Direction;
+    from: Position;
+    to: Position;
+    crate: Readonly<{ index: number; from: Position; to: Position }> | undefined;
+}>;
 
 export class RobotGame
 {
@@ -76,11 +83,12 @@ export class RobotGame
         return this.gameStatus;
     }
 
-    public move(direction: Direction): boolean
+    // Inspect a step without changing game state.
+    public getMove(direction: Direction): RobotMove | undefined
     {
         if (this.gameStatus !== "playing")
         {
-            return false;
+            return undefined;
         }
 
         let { column, row } = this.robotPosition;
@@ -102,7 +110,7 @@ export class RobotGame
 
         if (this.isFixedObstacle(column, row))
         {
-            return false;
+            return undefined;
         }
 
         const crateIndex = this.cratePositions.findIndex(crate => crate.column === column && crate.row === row);
@@ -113,21 +121,50 @@ export class RobotGame
 
             if (!this.canCrateEnter(crateColumn, crateRow))
             {
-                return false;
+                return undefined;
             }
 
-            this.cratePositions[crateIndex] = { column: crateColumn, row: crateRow };
+            return {
+                direction,
+                from : this.robotPosition,
+                to   : { column, row },
+                crate: { index: crateIndex, from: this.cratePositions[crateIndex]!, to: { column: crateColumn, row: crateRow } }
+            };
         }
 
-        this.robotPosition = { column, row };
+        return { direction, from: this.robotPosition, to: { column, row }, crate: undefined };
+    }
 
+    public collectAt({ column, row }: Position): boolean
+    {
         const scrapIndex = this.scrapPositions.findIndex(scrap => scrap.column === column && scrap.row === row);
-        if (scrapIndex !== -1)
+        if (scrapIndex === -1)
         {
-            this.scrapPositions.splice(scrapIndex, 1);
+            return false;
         }
 
-        // The last pickup activates security; check sight before completion.
+        this.scrapPositions.splice(scrapIndex, 1);
+        return true;
+    }
+
+    public move(direction: Direction): boolean
+    {
+        const move = this.getMove(direction);
+        if (!move)
+        {
+            return false;
+        }
+
+        if (move.crate)
+        {
+            this.cratePositions[move.crate.index] = move.crate.to;
+        }
+        this.robotPosition    = move.to;
+        const { column, row } = move.to;
+
+        this.collectAt(move.to);
+
+        // Resolve security and completion only after reaching the destination tile.
         if (this.active && this.isExposed())
         {
             this.gameStatus = "caught";

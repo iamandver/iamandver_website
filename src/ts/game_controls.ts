@@ -2,9 +2,11 @@ import { isTerminalOpen } from "./terminal.ts";
 
 export type Direction = "up" | "down" | "left" | "right";
 
+// Optional release handling supports held keys; a swipe remains one press/release.
 // Returns a function to discard a pending gesture when restarting a game.
 export function initGameControls(onMove: (direction: Direction) => void,
-                                 canMove: () => boolean = () => true): () => void
+                                 canMove: () => boolean = () => true,
+                                 onRelease?: (direction: Direction) => void): () => void
 {
     const gestureSurface = document.body;
     const directions: Partial<Record<string, Direction>> = {
@@ -33,6 +35,15 @@ export function initGameControls(onMove: (direction: Direction) => void,
         if (!event.repeat && canMove())
         {
             onMove(direction);
+        }
+    });
+
+    document.addEventListener("keyup", event =>
+    {
+        const direction = directions[event.key];
+        if (direction)
+        {
+            onRelease?.(direction);
         }
     });
 
@@ -78,6 +89,7 @@ export function initGameControls(onMove: (direction: Direction) => void,
                                      ? (deltaX > 0 ? "right" : "left")
                                      : (deltaY > 0 ? "down" : "up");
         onMove(direction);
+        onRelease?.(direction);
     });
 
     const cancelSwipe = (event: PointerEvent) =>

@@ -23,7 +23,8 @@ export const rooms: readonly RoomDefinition[] = [
         room : 1,
         name : "Cargo bay",
         map  : `
-#####E#####
+.....##E##.
+######...##
 #.........#
 #.........#
 #....S....#

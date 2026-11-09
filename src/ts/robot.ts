@@ -1,9 +1,11 @@
 import "./common.ts";
 import { initGameControls }                                             from "./game_controls.ts";
-import { RobotGame }                                                    from "./robot_game.ts";
+import { RobotGame, type Position }                                     from "./robot_game.ts";
+import { RobotMovement }                                                from "./robot_movement.ts";
 import { boardSize, getOrderedRooms, type RoomDefinition, roomSymbols } from "./robot_levels.ts";
 import { clearRoomCheckpoint, loadRoomIndex, saveRoomCheckpoint }       from "./robot_progress.ts";
 import { spriteSheetUrl, sprites, tileSize }                            from "./robot_sprites.ts";
+import { isTerminalOpen }                                               from "./terminal.ts";
 
 window.addEventListener("DOMContentLoaded", () =>
 {
@@ -87,14 +89,22 @@ async function init(): Promise<void>
                               sprite.row * tileSize,
                               tileSize,
                               tileSize,
-                              (column + offsetColumn) * tileSize,
-                              (row + offsetRow) * tileSize,
+                              Math.round((column + offsetColumn) * tileSize),
+                              Math.round((row + offsetRow) * tileSize),
                               tileSize,
                               tileSize);
         };
 
+        const drawMovingSprite = (name: keyof typeof sprites, from: Position, to: Position, progress: number): void =>
+        {
+            drawSprite(name,
+                       from.column + (to.column - from.column) * progress,
+                       from.row + (to.row - from.row) * progress);
+        };
+
         const render = () =>
         {
+            const step = movement.step;
             context.clearRect(0, 0, canvas.width, canvas.height);
 
             for (const [row, cells] of game.rows.entries())
@@ -115,13 +125,30 @@ async function init(): Promise<void>
             {
                 drawSprite("scrap", scrap.column, scrap.row);
             }
-            for (const crate of game.crates)
+            for (const [index, crate] of game.crates.entries())
             {
-                drawSprite("crate", crate.column, crate.row);
+                if (step?.move.crate?.index === index)
+                {
+                    drawMovingSprite("crate", step.move.crate.from, step.move.crate.to, step.progress);
+                }
+                else
+                {
+                    drawSprite("crate", crate.column, crate.row);
+                }
             }
 
-            drawSprite("robot", game.robot.column, game.robot.row);
+            if (step)
+            {
+                drawMovingSprite("robot", step.move.from, step.move.to, step.progress);
+            }
+            else
+            {
+                drawSprite("robot", game.robot.column, game.robot.row);
+            }
+        };
 
+        const updateStatus = () =>
+        {
             instructions.dataset.state = game.status;
             if (game.status === "caught")
             {
@@ -168,13 +195,16 @@ async function init(): Promise<void>
 
                 // Measure at the chosen width so wrapped text and the whole frame count toward height.
                 const overflow = gameElement.getBoundingClientRect().height - availableHeight;
+
                 if (overflow <= 0 || scale <= minimumScale)
                 {
                     break;
                 }
+
                 const heightFit = Math.max(minimumScale, scale - overflow / canvas.height);
                 scale           = touchScreen.matches ? heightFit : Math.max(1, Math.floor(heightFit));
             }
+
             navigation.style.setProperty("--game-width", gameElement.style.inlineSize);
         };
 
@@ -183,21 +213,43 @@ async function init(): Promise<void>
         touchScreen.addEventListener("change", resizeBoard);
         void document.fonts.ready.then(resizeBoard);
 
-        render();
+        const movement      = new RobotMovement(() => game, render, () =>
+        {
+            if (game.status === "complete" && roomIndex + 1 < rooms.length)
+            {
+                resetControls();
+                movement.reset();
+                roomIndex++;
+                game = loadRoom();
+            }
+            updateStatus();
+        }, { onPickup: updateStatus });
+        const resetControls = initGameControls(direction => movement.press(direction),
+                                               () => game.status === "playing",
+                                               direction => movement.release(direction));
 
-        const resetControls = initGameControls(direction =>
-                                               {
-                                                   if (game.move(direction))
-                                                   {
-                                                       if (game.status === "complete" && roomIndex + 1 < rooms.length)
-                                                       {
-                                                           resetControls();
-                                                           roomIndex++;
-                                                           game = loadRoom();
-                                                       }
-                                                       render();
-                                                   }
-                                               }, () => game.status === "playing");
+        const syncPause = () =>
+        {
+            const paused = document.hidden || !document.hasFocus() || isTerminalOpen();
+            if (paused)
+            {
+                resetControls();
+            }
+            movement.setPaused(paused);
+        };
+        window.addEventListener("blur", () =>
+        {
+            resetControls();
+            movement.setPaused(true);
+        });
+        window.addEventListener("focus", syncPause);
+        document.addEventListener("visibilitychange", syncPause);
+        const terminalObserver = new MutationObserver(syncPause);
+        terminalObserver.observe(document.getElementById("terminal")!, { attributes: true, attributeFilter: ["hidden"] });
+
+        syncPause();
+        updateStatus();
+        render();
 
         const restartButton    = document.querySelector<HTMLButtonElement>("#robot-restart")!;
         restartButton.disabled = false;
@@ -205,7 +257,9 @@ async function init(): Promise<void>
         restartButton.addEventListener("click", () =>
         {
             resetControls();
+            movement.reset();
             game = loadRoom();
+            updateStatus();
             render();
         });
 
