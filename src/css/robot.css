@@ -16,16 +16,23 @@
 }
 
 .robot-game {
-    display         : grid;
-    inline-size     : 100%;
-    min-inline-size : 0;
-    gap             : 16px;
+    /* The board area gets the remaining height, independently of canvas scale. */
+    display            : grid;
+    grid-template-rows : auto minmax(0, 1fr) auto;
+    inline-size        : 100%;
+    block-size         : 100%;
+    min-inline-size    : 0;
+    min-block-size     : 0;
+    gap                : 16px;
 }
 
 .robot-heading {
     display               : grid;
     grid-template-columns : 1fr auto;
     align-items           : center;
+    justify-self          : center;
+    inline-size           : 100%;
+    max-inline-size       : var(--max-content-width);
     gap                   : 8px 16px;
 }
 
@@ -61,13 +68,16 @@
     white-space    : nowrap;
 }
 
-.robot-board-frame {
-    justify-self    : center;
-    max-inline-size : 100%;
+.robot-board-area {
+    display         : grid;
+    place-items     : center;
+    min-inline-size : 0;
+    min-block-size  : 0;
 }
 
 #robot-board {
     display          : block;
+    max-inline-size  : none;
     block-size       : auto;
     background-color : var(--color-black);
     image-rendering  : pixelated;
