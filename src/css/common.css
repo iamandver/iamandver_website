@@ -71,7 +71,7 @@ ul {
         content  : "*";
         position : absolute;
         left     : calc(var(--padding-left) * -1);
-        color      : var(--color-red-bright);
+        color    : var(--color-red-bright);
     }
 }
 
@@ -142,7 +142,12 @@ ul {
 }
 
 .page-navigation {
-    margin-block : 16px;
+    --game-width    : 0px;
+
+    inline-size     : 100%;
+    max-inline-size : max(calc(var(--max-content-width) - var(--page-padding) * 4), var(--game-width));
+    margin-inline   : auto;
+    margin-block    : 16px;
 }
 
 .accent {

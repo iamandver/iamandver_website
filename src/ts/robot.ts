@@ -129,7 +129,7 @@ async function init(): Promise<void>
             }
             else if (game.status === "complete")
             {
-                instructions.textContent = "All rooms complete!\nRestart to replay this room.";
+                instructions.textContent = "All rooms complete!";
             }
             else
             {
@@ -143,6 +143,7 @@ async function init(): Promise<void>
         const container   = document.querySelector<HTMLElement>(".robot-container")!;
         const gameElement = document.querySelector<HTMLElement>(".robot-game")!;
         const frame       = document.querySelector<HTMLElement>(".robot-board-frame")!;
+        const navigation  = document.querySelector<HTMLElement>(".page-navigation")!;
         const touchScreen = window.matchMedia("(pointer: coarse)");
 
         const resizeBoard = () =>
@@ -159,7 +160,7 @@ async function init(): Promise<void>
 
             // A short viewport must not collapse the board and its unscaled controls.
             const minimumScale = touchScreen.matches ? Math.min(1, widthFit) : 1;
-            let scale = touchScreen.matches ? widthFit : Math.max(1, Math.floor(widthFit));
+            let scale          = touchScreen.matches ? widthFit : Math.max(1, Math.floor(widthFit));
             while (true)
             {
                 canvas.style.inlineSize      = `${canvas.width * scale}px`;
@@ -174,6 +175,7 @@ async function init(): Promise<void>
                 const heightFit = Math.max(minimumScale, scale - overflow / canvas.height);
                 scale           = touchScreen.matches ? heightFit : Math.max(1, Math.floor(heightFit));
             }
+            navigation.style.setProperty("--game-width", gameElement.style.inlineSize);
         };
 
         const boardResizeObserver = new ResizeObserver(resizeBoard);
