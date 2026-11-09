@@ -1,9 +1,9 @@
 import "./common.ts";
-import { initGameControls }                  from "./game_controls.ts";
-import { RobotGame }                         from "./robot_game.ts";
-import { getOrderedRooms, roomSymbols }      from "./robot_levels.ts";
+import { initGameControls }                                       from "./game_controls.ts";
+import { RobotGame }                                              from "./robot_game.ts";
+import { getOrderedRooms, type RoomDefinition, roomSymbols }      from "./robot_levels.ts";
 import { clearRoomCheckpoint, loadRoomIndex, saveRoomCheckpoint } from "./robot_progress.ts";
-import { spriteSheetUrl, sprites, tileSize } from "./robot_sprites.ts";
+import { spriteSheetUrl, sprites, tileSize }                      from "./robot_sprites.ts";
 
 window.addEventListener("DOMContentLoaded", () =>
 {
@@ -12,7 +12,7 @@ window.addEventListener("DOMContentLoaded", () =>
 
 async function init(): Promise<void>
 {
-    const canvas = document.querySelector<HTMLCanvasElement>("#robot-board")!;
+    const canvas      = document.querySelector<HTMLCanvasElement>("#robot-board")!;
     const resetButton = document.querySelector<HTMLButtonElement>("#robot-reset")!;
     resetButton.addEventListener("click", () =>
     {
@@ -23,13 +23,13 @@ async function init(): Promise<void>
 
     try
     {
-        const rooms   = getOrderedRooms();
-        const url     = new URL(window.location.href);
-        const practiceRoom = url.searchParams.get("room");
-        const practice = practiceRoom !== null;
-        let roomIndex = practice
-                        ? rooms.findIndex(room => `${room.level}-${room.room}` === practiceRoom)
-                        : loadRoomIndex(rooms);
+        const rooms: readonly RoomDefinition[] = getOrderedRooms();
+        const url: URL                         = new URL(window.location.href);
+        const practiceRoom: string | null      = url.searchParams.get("room");
+        const practice: boolean                = practiceRoom !== null;
+        let roomIndex: number                  = practice
+                                                 ? rooms.findIndex(room => `${room.level}-${room.room}` === practiceRoom)
+                                                 : loadRoomIndex(rooms);
         if (roomIndex === -1)
         {
             throw new Error(`Practice room ${practiceRoom} not found.\nUse robot resume in the terminal to return to saved progress.`);
@@ -55,8 +55,13 @@ async function init(): Promise<void>
             canvas.height = game.rows.length * tileSize;
             canvas.style.setProperty("--room-width", String(canvas.width));
             canvas.style.setProperty("--room-height", String(canvas.height));
-            context.imageSmoothingEnabled                            = false;
-            document.getElementById("robot-room-title")!.textContent = `${practice ? "Practice · " : ""}Level ${room.level} · Room ${room.room} · ${room.name}`;
+
+            context.imageSmoothingEnabled                           = false;
+            document.getElementById("robot-practice")!.hidden       = !practice;
+            document.getElementById("robot-level")!.textContent     = `Level ${room.level}`;
+            document.getElementById("robot-room")!.textContent      = `Room ${room.room}`;
+            document.getElementById("robot-room-name")!.textContent = room.name;
+
             if (practice)
             {
                 url.searchParams.set("room", `${room.level}-${room.room}`);
@@ -128,8 +133,8 @@ async function init(): Promise<void>
             else
             {
                 instructions.textContent = game.active
-                                           ? "Exit open · Swipe / arrows\nSecurity active."
-                                           : `${game.scraps.length} scrap left · Swipe / arrows\nLast scrap wakes the sentry.`;
+                                           ? "Exit open · Swipe / arrows"
+                                           : `${game.scraps.length} scrap left · Swipe / arrows`;
             }
         };
 
