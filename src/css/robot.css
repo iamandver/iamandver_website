@@ -12,27 +12,20 @@
     grid-template-rows    : minmax(0, 1fr);
     min-block-size        : 0;
     overflow              : clip;
-    padding               : 16px 0;
+    /*padding               : 16px 0;*/
 }
 
 .robot-game {
-    /* The board area gets the remaining height, independently of canvas scale. */
-    display            : grid;
-    grid-template-rows : auto minmax(0, 1fr) auto;
-    inline-size        : 100%;
-    block-size         : 100%;
-    min-inline-size    : 0;
-    min-block-size     : 0;
-    gap                : 16px;
+    display               : grid;
+    grid-template-columns : minmax(0, 1fr);
+    min-inline-size       : 0;
+    gap                   : 16px;
 }
 
 .robot-heading {
     display               : grid;
     grid-template-columns : 1fr auto;
     align-items           : center;
-    justify-self          : center;
-    inline-size           : 100%;
-    max-inline-size       : var(--max-content-width);
     gap                   : 8px 16px;
 }
 
@@ -68,11 +61,8 @@
     white-space    : nowrap;
 }
 
-.robot-board-area {
-    display         : grid;
-    place-items     : center;
-    min-inline-size : 0;
-    min-block-size  : 0;
+.robot-board-frame {
+    justify-self : center;
 }
 
 #robot-board {
@@ -84,11 +74,11 @@
 }
 
 .robot-instructions {
-    min-block-size : 2.4em;
-    text-align     : center;
-    white-space    : pre-line;
-    line-height    : 1.2;
-    color          : var(--color-text-muted);
+    /*min-block-size : 2.4em;*/
+    text-align  : center;
+    white-space : pre-line;
+    line-height : 1.2;
+    color       : var(--color-text-muted);
 }
 
 .robot-instructions[data-state="caught"] {
@@ -131,16 +121,16 @@
     }
 }
 
-@media (max-width : 550px) {
-    .game-page {
-        padding-inline : 8px;
-    }
+/*@media (max-width : 550px) {*/
+/*    .game-page {*/
+/*        padding-inline : 8px;*/
+/*    }*/
 
-    .robot-container {
-        padding-block : 4px;
-    }
+/*    .robot-container {*/
+/*        padding-block : 4px;*/
+/*    }*/
 
-    .robot-game {
-        gap : 8px;
-    }
-}
+/*    .robot-game {*/
+/*        gap : 8px;*/
+/*    }*/
+/*}*/
