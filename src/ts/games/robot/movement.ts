@@ -1,5 +1,5 @@
 import type { Direction }            from "../controls.ts";
-import type { RobotGame, RobotMove } from "./game.ts";
+import type { RobotRoom, RobotMove } from "./room.ts";
 
 type RobotMovementOptions = Readonly<{
     stepDurationMS?: number; // Positive duration of one tile step.
@@ -10,7 +10,7 @@ type RobotMovementOptions = Readonly<{
 // Finish each tile step, then follow the most recently pressed direction that is still held.
 export class RobotMovement
 {
-    private readonly getGame: () => RobotGame;
+    private readonly getRoom: () => RobotRoom;
     private readonly draw: () => void;
     private readonly onArrival: () => void;
     private readonly onPickup: (() => void) | undefined;
@@ -24,10 +24,10 @@ export class RobotMovement
     private frameId: number | undefined;
     private paused  = false;
 
-    constructor(getGame: () => RobotGame, draw: () => void, onArrival: () => void,
+    constructor(getRoom: () => RobotRoom, draw: () => void, onArrival: () => void,
                 options: RobotMovementOptions = {})
     {
-        this.getGame        = getGame;
+        this.getRoom        = getRoom;
         this.draw           = draw;
         this.onArrival      = onArrival;
         this.onPickup       = options.onPickup;
@@ -42,7 +42,7 @@ export class RobotMovement
 
     public press(direction: Direction): void
     {
-        if (this.paused || this.getGame().status !== "playing" || this.heldDirections.includes(direction))
+        if (this.paused || this.getRoom().status !== "playing" || this.heldDirections.includes(direction))
         {
             return;
         }
@@ -107,7 +107,7 @@ export class RobotMovement
             return;
         }
         const direction = this.heldDirections.at(-1);
-        this.activeMove = direction ? this.getGame().getMove(direction) : undefined;
+        this.activeMove = direction ? this.getRoom().getMove(direction) : undefined;
     }
 
     private requestFrame(): void
@@ -131,7 +131,7 @@ export class RobotMovement
         {
             // Pick up before committing arrival, even when a frame crosses both moments.
             if (this.elapsed >= this.stepDurationMS * this.pickupProgress
-                && this.getGame().collectAt(this.activeMove.to))
+                && this.getRoom().collectAt(this.activeMove.to))
             {
                 this.onPickup?.();
             }
@@ -144,7 +144,7 @@ export class RobotMovement
             const move      = this.activeMove;
             this.elapsed -= this.stepDurationMS;
             this.activeMove = undefined;
-            this.getGame().move(move.direction);
+            this.getRoom().move(move.direction);
             this.onArrival();
             this.beginStep();
         }

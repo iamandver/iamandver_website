@@ -10,7 +10,7 @@ export type RobotMove = Readonly<{
     crate: Readonly<{ index: number; from: Position; to: Position }> | undefined;
 }>;
 
-export class RobotGame
+export class RobotRoom
 {
     public readonly rows: readonly string[];
     public readonly exit: Position;
@@ -83,7 +83,7 @@ export class RobotGame
         return this.gameStatus;
     }
 
-    // Inspect a step without changing game state.
+    // Inspect a step without changing room state.
     public getMove(direction: Direction): RobotMove | undefined
     {
         if (this.gameStatus !== "playing")
