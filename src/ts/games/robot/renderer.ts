@@ -1,9 +1,9 @@
-import type { Direction }                                               from "../controls.ts";
-import { AnimationPlayer }                                              from "./animation_player.ts";
-import { boardSize, roomSymbols }                                       from "./levels.ts";
-import type { RobotMovement }                                           from "./movement.ts";
-import type { Position, RobotRoom }                                     from "./room.ts";
-import { robotSprites, spriteSheetUrl, sprites, tileSize, type Sprite } from "./sprites.ts";
+import type { Direction }                                                             from "../controls.ts";
+import { AnimationPlayer }                                                            from "./animation_player.ts";
+import { boardSize, roomSymbols }                                                     from "./levels.ts";
+import type { RobotMovement }                                                         from "./movement.ts";
+import type { Position, RobotRoom }                                                   from "./room.ts";
+import { robotSprites, spriteSheetUrl, sprites, tileSize, wallSpriteAt, type Sprite } from "./sprites.ts";
 
 export class RobotRenderer
 {
@@ -98,7 +98,8 @@ export class RobotRenderer
         {
             for (const [column, cell] of Array.from(cells).entries())
             {
-                drawSprite(cell === roomSymbols.wall ? sprites.wall : sprites.floor, column, row);
+                const sprite = cell === roomSymbols.wall ? wallSpriteAt(room.rows, column, row) : sprites.floor;
+                drawSprite(sprite, column, row);
             }
         }
 
