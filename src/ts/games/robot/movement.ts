@@ -11,7 +11,6 @@ type RobotMovementOptions = Readonly<{
 export class RobotMovement
 {
     private readonly getRoom: () => RobotRoom;
-    private readonly draw: () => void;
     private readonly onArrival: () => void;
     private readonly onPickup: (() => void) | undefined;
     private readonly stepDurationMS: number;
@@ -19,16 +18,15 @@ export class RobotMovement
     private readonly heldDirections: Direction[] = [];
 
     private activeMove: RobotMove | undefined;
-    private elapsed = 0;
-    private lastFrame: number | undefined;
-    private frameId: number | undefined;
-    private paused  = false;
+    private elapsed             = 0;
+    private elapsedBeforeStepMS = 0;
+    private paused              = false;
 
-    constructor(getRoom: () => RobotRoom, draw: () => void, onArrival: () => void,
+    constructor(getRoom: () => RobotRoom,
+                onArrival: () => void,
                 options: RobotMovementOptions = {})
     {
         this.getRoom        = getRoom;
-        this.draw           = draw;
         this.onArrival      = onArrival;
         this.onPickup       = options.onPickup;
         this.stepDurationMS = options.stepDurationMS ?? 240;
@@ -40,7 +38,7 @@ export class RobotMovement
         return this.activeMove ? { move: this.activeMove, progress: this.elapsed / this.stepDurationMS } : undefined;
     }
 
-    public press(direction: Direction): void
+    public press(direction: Direction, elapsedSinceFrameMS: number): void
     {
         if (this.paused || this.getRoom().status !== "playing" || this.heldDirections.includes(direction))
         {
@@ -48,27 +46,25 @@ export class RobotMovement
         }
 
         this.heldDirections.push(direction);
-        this.beginStep();
-        this.requestFrame();
+        this.beginStep(elapsedSinceFrameMS);
     }
 
-    public release(direction: Direction): void
+    public release(direction: Direction, elapsedSinceFrameMS: number): void
     {
         const index = this.heldDirections.indexOf(direction);
         if (index !== -1)
         {
             this.heldDirections.splice(index, 1);
         }
-        this.beginStep();
-        this.requestFrame();
+        this.beginStep(elapsedSinceFrameMS);
     }
 
     public reset(): void
     {
         this.clearInput();
-        this.stopFrames();
-        this.activeMove = undefined;
-        this.elapsed    = 0;
+        this.activeMove          = undefined;
+        this.elapsed             = 0;
+        this.elapsedBeforeStepMS = 0;
     }
 
     public setPaused(paused: boolean): void
@@ -76,57 +72,24 @@ export class RobotMovement
         if (paused)
         {
             this.clearInput();
-            this.stopFrames();
+            this.elapsedBeforeStepMS = 0;
         }
         this.paused = paused;
-        if (!paused)
+    }
+
+    // Report whether a step was processed so the controller can redraw the board.
+    public update(deltaMS: number): boolean
+    {
+        if (!this.activeMove || this.paused)
         {
-            this.requestFrame();
+            return false;
         }
-    }
 
-    private clearInput(): void
-    {
-        this.heldDirections.length = 0;
-    }
-
-    private stopFrames(): void
-    {
-        if (this.frameId !== undefined)
-        {
-            cancelAnimationFrame(this.frameId);
-        }
-        this.frameId   = undefined;
-        this.lastFrame = undefined;
-    }
-
-    private beginStep(): void
-    {
-        if (this.activeMove || this.paused)
-        {
-            return;
-        }
-        const direction = this.heldDirections.at(-1);
-        this.activeMove = direction ? this.getRoom().getMove(direction) : undefined;
-    }
-
-    private requestFrame(): void
-    {
-        if (!this.activeMove || this.paused || this.frameId !== undefined)
-        {
-            return;
-        }
-        this.lastFrame ??= performance.now();
-        this.frameId = requestAnimationFrame(this.animate);
-    }
-
-    private readonly animate = (timestamp: number): void =>
-    {
-        this.frameId   = undefined;
-        // Bound a long foreground stall; hidden tabs pause explicitly instead of catching up.
-        this.elapsed += Math.max(0, Math.min(timestamp - this.lastFrame!, this.stepDurationMS));
-        this.lastFrame = timestamp;
-
+        // The first frame can include time before the input that started this step.
+        const stepDeltaMS        = Math.max(0, deltaMS - this.elapsedBeforeStepMS);
+        this.elapsedBeforeStepMS = 0;
+        // Limit progress after a long foreground stall to one tile's worth of time.
+        this.elapsed += Math.min(stepDeltaMS, this.stepDurationMS);
         while (this.activeMove)
         {
             // Pick up before committing arrival, even when a frame crosses both moments.
@@ -149,16 +112,26 @@ export class RobotMovement
             this.beginStep();
         }
 
-        this.draw();
+        if (!this.activeMove)
+        {
+            this.elapsed = 0;
+        }
+        return true;
+    }
 
-        if (this.activeMove)
+    private clearInput(): void
+    {
+        this.heldDirections.length = 0;
+    }
+
+    private beginStep(elapsedBeforeStepMS = 0): void
+    {
+        if (this.activeMove || this.paused)
         {
-            this.requestFrame();
+            return;
         }
-        else
-        {
-            this.elapsed   = 0;
-            this.lastFrame = undefined;
-        }
-    };
+        const direction          = this.heldDirections.at(-1);
+        this.activeMove          = direction ? this.getRoom().getMove(direction) : undefined;
+        this.elapsedBeforeStepMS = elapsedBeforeStepMS;
+    }
 }

@@ -1,9 +1,10 @@
-import { RobotRoom }                                              from "./room.ts";
+import { GameLoop }                                               from "./game_loop.ts";
 import { getOrderedRooms, type RoomDefinition }                   from "./levels.ts";
 import { RobotMovement }                                          from "./movement.ts";
 import type { RobotPageView }                                     from "./page_view.ts";
 import { clearRoomCheckpoint, loadRoomIndex, saveRoomCheckpoint } from "./progress.ts";
 import { RobotRenderer }                                          from "./renderer.ts";
+import { RobotRoom }                                              from "./room.ts";
 
 export class RobotController
 {
@@ -13,6 +14,7 @@ export class RobotController
     private readonly url: URL;
     private readonly practice: boolean;
     private readonly movement: RobotMovement;
+    private readonly loop: GameLoop;
     private readonly resetControls: () => void;
 
     private roomIndex: number;
@@ -35,20 +37,25 @@ export class RobotController
         page.observeSize();
 
         this.movement      = new RobotMovement(() => this.room,
-                                               () => this.render(),
                                                () => this.onArrival(),
                                                { onPickup: () => page.showStatus(this.room) });
-        this.resetControls = page.bindControls(direction => this.movement.press(direction),
+        this.loop          = new GameLoop(this.update);
+        this.resetControls = page.bindControls(direction => this.movement.press(direction, this.loop.elapsedSinceFrameMS),
                                                () => this.room.status === "playing",
-                                               direction => this.movement.release(direction));
+                                               direction => this.movement.release(direction, this.loop.elapsedSinceFrameMS));
 
         page.observePause(paused =>
                           {
                               if (paused)
                               {
+                                  this.loop.stop();
                                   this.resetControls();
                               }
                               this.movement.setPaused(paused);
+                              if (!paused)
+                              {
+                                  this.loop.start();
+                              }
                           });
 
         page.showStatus(this.room);
@@ -116,6 +123,14 @@ export class RobotController
         }
         this.page.showStatus(this.room);
     }
+
+    private readonly update = (deltaMS: number): void =>
+    {
+        if (this.movement.update(deltaMS))
+        {
+            this.render();
+        }
+    };
 
     private render(): void
     {
