@@ -22,7 +22,7 @@ export class RobotPageView
         document.getElementById("robot-room-name")!.textContent = room.name;
     }
 
-    public showStatus(room: Pick<RobotRoom, "status" | "active" | "scraps">): void
+    public showStatus(room: Pick<RobotRoom, "status" | "allScrapCollected" | "scraps">): void
     {
         this.instructions.dataset.state = room.status;
         if (room.status === "caught")
@@ -35,7 +35,7 @@ export class RobotPageView
         }
         else
         {
-            this.instructions.textContent = room.active
+            this.instructions.textContent = room.allScrapCollected
                                             ? "Exit open · Swipe / arrows"
                                             : `${room.scraps.length} scrap left · Swipe / arrows`;
         }

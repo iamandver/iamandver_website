@@ -3,6 +3,8 @@ import { boardSize, roomSymbols } from "./levels.ts";
 
 export type Position = Readonly<{ column: number; row: number }>;
 
+type SentryState = Position & { triggered: boolean };
+
 export type RobotMove = Readonly<{
     direction: Direction;
     from: Position;
@@ -14,11 +16,11 @@ export class RobotRoom
 {
     public readonly rows: readonly string[];
     public readonly exit: Position;
-    public readonly sentries: readonly Position[];
 
     private robotPosition: Position;
     private readonly cratePositions: Position[] = [];
     private readonly scrapPositions: Position[] = [];
+    private readonly sentryStates: SentryState[] = [];
 
     private gameStatus: "playing" | "caught" | "complete" = "playing";
 
@@ -29,8 +31,6 @@ export class RobotRoom
         this.robotPosition = { column: rows[row]!.indexOf(roomSymbols.robot), row };
         const exitRow      = rows.findIndex(cells => cells.includes(roomSymbols.exit));
         this.exit          = { column: rows[exitRow]!.indexOf(roomSymbols.exit), row: exitRow };
-
-        const sentries: Position[] = [];
 
         for (const [row, cells] of rows.entries())
         {
@@ -46,16 +46,15 @@ export class RobotRoom
                 }
                 else if (cell === roomSymbols.sentry)
                 {
-                    sentries.push({ column, row });
+                    this.sentryStates.push({ column, row, triggered: false });
                 }
             }
         }
 
-        this.rows     = rows.map(cells => cells
+        this.rows = rows.map(cells => cells
             .replaceAll(roomSymbols.robot, roomSymbols.floor)
             .replaceAll(roomSymbols.crate, roomSymbols.floor)
             .replaceAll(roomSymbols.scrap, roomSymbols.floor));
-        this.sentries = sentries;
     }
 
     public get robot(): Position
@@ -73,7 +72,12 @@ export class RobotRoom
         return this.scrapPositions;
     }
 
-    public get active(): boolean
+    public get sentries(): readonly Readonly<SentryState>[]
+    {
+        return this.sentryStates;
+    }
+
+    public get allScrapCollected(): boolean
     {
         return this.scrapPositions.length === 0;
     }
@@ -165,11 +169,22 @@ export class RobotRoom
         this.collectAt(move.to);
 
         // Resolve security and completion only after reaching the destination tile.
-        if (this.active && this.isExposed())
+        if (!this.allScrapCollected)
+        {
+            return true;
+        }
+
+        const detectingSentries = this.sentryStates.filter(sentry => this.canSeeRobot(sentry));
+        for (const sentry of detectingSentries)
+        {
+            sentry.triggered = true;
+        }
+
+        if (detectingSentries.length > 0)
         {
             this.gameStatus = "caught";
         }
-        else if (this.active && column === this.exit.column && row === this.exit.row)
+        else if (column === this.exit.column && row === this.exit.row)
         {
             this.gameStatus = "complete";
         }
@@ -182,7 +197,7 @@ export class RobotRoom
         return cell === undefined
                || cell === roomSymbols.wall
                || cell === roomSymbols.sentry
-               || (cell === roomSymbols.exit && !this.active);
+               || (cell === roomSymbols.exit && !this.allScrapCollected);
     }
 
     private canCrateEnter(column: number, row: number): boolean
@@ -192,34 +207,31 @@ export class RobotRoom
                && !this.scrapPositions.some(scrap => scrap.column === column && scrap.row === row);
     }
 
-    private isExposed(): boolean
+    private canSeeRobot(sentry: Position): boolean
     {
-        return this.sentries.some(sentry =>
-                                  {
-                                      if (sentry.row !== this.robotPosition.row && sentry.column !== this.robotPosition.column)
-                                      {
-                                          return false;
-                                      }
+        if (sentry.row !== this.robotPosition.row && sentry.column !== this.robotPosition.column)
+        {
+            return false;
+        }
 
-                                      const stepColumn = Math.sign(this.robotPosition.column - sentry.column);
-                                      const stepRow    = Math.sign(this.robotPosition.row - sentry.row);
-                                      let column       = sentry.column + stepColumn;
-                                      let row          = sentry.row + stepRow;
+        const stepColumn = Math.sign(this.robotPosition.column - sentry.column);
+        const stepRow    = Math.sign(this.robotPosition.row - sentry.row);
+        let column       = sentry.column + stepColumn;
+        let row          = sentry.row + stepRow;
 
-                                      while (column !== this.robotPosition.column || row !== this.robotPosition.row)
-                                      {
-                                          if (this.isFixedObstacle(column, row) ||
-                                              this.cratePositions.some(crate => crate.column === column && crate.row === row))
-                                          {
-                                              return false;
-                                          }
+        while (column !== this.robotPosition.column || row !== this.robotPosition.row)
+        {
+            if (this.isFixedObstacle(column, row) ||
+                this.cratePositions.some(crate => crate.column === column && crate.row === row))
+            {
+                return false;
+            }
 
-                                          column += stepColumn;
-                                          row += stepRow;
-                                      }
+            column += stepColumn;
+            row += stepRow;
+        }
 
-                                      return true;
-                                  });
+        return true;
     }
 }
 

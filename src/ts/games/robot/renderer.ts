@@ -73,11 +73,12 @@ export class RobotRenderer
             }
         }
 
-        drawSprite("door", room.exit.column, room.exit.row);
+        drawSprite(room.allScrapCollected ? "doorOpen" : "doorClosed", room.exit.column, room.exit.row);
 
+        const sentrySprite = room.allScrapCollected ? "sentryActive" : "sentryPassive";
         for (const sentry of room.sentries)
         {
-            drawSprite("sentry", sentry.column, sentry.row);
+            drawSprite(sentrySprite, sentry.column, sentry.row);
         }
         for (const scrap of room.scraps)
         {
@@ -97,11 +98,11 @@ export class RobotRenderer
 
         if (step)
         {
-            drawMovingSprite("robot", step.move.from, step.move.to, step.progress);
+            drawMovingSprite("robotIdleFront", step.move.from, step.move.to, step.progress);
         }
         else
         {
-            drawSprite("robot", room.robot.column, room.robot.row);
+            drawSprite("robotIdleFront", room.robot.column, room.robot.row);
         }
     }
 }
