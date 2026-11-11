@@ -1,5 +1,5 @@
-import type { Direction }         from "./game_controls.ts";
-import { boardSize, roomSymbols } from "./robot_levels.ts";
+import type { Direction }         from "../controls.ts";
+import { boardSize, roomSymbols } from "./levels.ts";
 
 export type Position = Readonly<{ column: number; row: number }>;
 

@@ -1,4 +1,4 @@
-import spriteSheetUrl from "../assets/game_assets/art/robot_sprite_sheet.png";
+import spriteSheetUrl from "../../../assets/game_assets/art/robot_sprite_sheet.png";
 
 export { spriteSheetUrl };
 

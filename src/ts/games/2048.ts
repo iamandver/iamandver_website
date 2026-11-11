@@ -1,5 +1,5 @@
-import "./common.ts";
-import { initGameControls, type Direction } from "./game_controls.ts";
+import "../site/common.ts";
+import { initGameControls, type Direction } from "./controls.ts";
 
 type GameResult = "won" | "lost";
 type ScoreRecords = { last: number | null; best: number };

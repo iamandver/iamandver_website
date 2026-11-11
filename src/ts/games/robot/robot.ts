@@ -1,11 +1,11 @@
-import "./common.ts";
-import { initGameControls }                                             from "./game_controls.ts";
-import { RobotGame, type Position }                                     from "./robot_game.ts";
-import { RobotMovement }                                                from "./robot_movement.ts";
-import { boardSize, getOrderedRooms, type RoomDefinition, roomSymbols } from "./robot_levels.ts";
-import { clearRoomCheckpoint, loadRoomIndex, saveRoomCheckpoint }       from "./robot_progress.ts";
-import { spriteSheetUrl, sprites, tileSize }                            from "./robot_sprites.ts";
-import { isTerminalOpen }                                               from "./terminal.ts";
+import "../../site/common.ts";
+import { initGameControls }                                             from "../controls.ts";
+import { RobotGame, type Position }                                     from "./game.ts";
+import { RobotMovement }                                                from "./movement.ts";
+import { boardSize, getOrderedRooms, type RoomDefinition, roomSymbols } from "./levels.ts";
+import { clearRoomCheckpoint, loadRoomIndex, saveRoomCheckpoint }       from "./progress.ts";
+import { spriteSheetUrl, sprites, tileSize }                            from "./sprites.ts";
+import { isTerminalOpen }                                               from "../../site/terminal.ts";
 
 window.addEventListener("DOMContentLoaded", () =>
 {

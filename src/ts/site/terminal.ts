@@ -1,5 +1,5 @@
-import { rooms } from "./robot_levels.ts";
-import { clearRoomCheckpoint } from "./robot_progress.ts";
+import { rooms } from "../games/robot/levels.ts";
+import { clearRoomCheckpoint } from "../games/robot/progress.ts";
 
 type TerminalState = {
     open: boolean;

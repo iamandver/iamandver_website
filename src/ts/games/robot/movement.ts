@@ -1,5 +1,5 @@
-import type { Direction }            from "./game_controls.ts";
-import type { RobotGame, RobotMove } from "./robot_game.ts";
+import type { Direction }            from "../controls.ts";
+import type { RobotGame, RobotMove } from "./game.ts";
 
 type RobotMovementOptions = Readonly<{
     stepDurationMS?: number; // Positive duration of one tile step.
@@ -7,7 +7,7 @@ type RobotMovementOptions = Readonly<{
     onPickup?: () => void;
 }>;
 
-// Only one tile step is active. Input may replace the next step, never the current one.
+// Finish each tile step, then follow the most recently pressed direction that is still held.
 export class RobotMovement
 {
     private readonly getGame: () => RobotGame;
@@ -18,7 +18,6 @@ export class RobotMovement
     private readonly pickupProgress: number;
     private readonly heldDirections: Direction[] = [];
 
-    private pendingDirection: Direction | undefined;
     private activeMove: RobotMove | undefined;
     private elapsed = 0;
     private lastFrame: number | undefined;
@@ -49,7 +48,6 @@ export class RobotMovement
         }
 
         this.heldDirections.push(direction);
-        this.pendingDirection = direction;
         this.beginStep();
         this.requestFrame();
     }
@@ -90,7 +88,6 @@ export class RobotMovement
     private clearInput(): void
     {
         this.heldDirections.length = 0;
-        this.pendingDirection      = undefined;
     }
 
     private stopFrames(): void
@@ -109,9 +106,8 @@ export class RobotMovement
         {
             return;
         }
-        const direction       = this.pendingDirection ?? this.heldDirections.at(-1);
-        this.pendingDirection = undefined;
-        this.activeMove       = direction ? this.getGame().getMove(direction) : undefined;
+        const direction = this.heldDirections.at(-1);
+        this.activeMove = direction ? this.getGame().getMove(direction) : undefined;
     }
 
     private requestFrame(): void

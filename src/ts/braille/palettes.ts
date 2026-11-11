@@ -1,4 +1,4 @@
-import type { RGBColor } from "./braille_converter.ts";
+import type { RGBColor } from "./converter.ts";
 
 export type PalettePreset = {
     name: string;

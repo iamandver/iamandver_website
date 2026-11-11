@@ -1,4 +1,4 @@
-import type { RoomDefinition } from "./robot_levels.ts";
+import type { RoomDefinition } from "./levels.ts";
 
 const progressStorageKey = "robot-progress-v1";
 

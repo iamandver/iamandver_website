@@ -1,4 +1,4 @@
-import { isTerminalOpen } from "./terminal.ts";
+import { isTerminalOpen } from "../site/terminal.ts";
 
 export type Direction = "up" | "down" | "left" | "right";
 

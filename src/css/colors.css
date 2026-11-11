@@ -39,7 +39,6 @@
     --color-yellow                  : var(--color-dos-yellow);
     --color-grey                    : var(--color-dos-grey);
 
-    --color-grey-dark-dim           : #555555;
     --color-grey-dark               : var(--color-dos-grey-dark-alt);
     --color-blue-bright             : var(--color-dos-blue-bright-alt);
     --color-green-bright            : var(--color-dos-green-bright);
@@ -50,9 +49,9 @@
 
     /* some extra 12 bit grays mainly for text */
     --color-12bit-grey-4            : #333333;
-    --color-12bit-grey-3            : #888888;
-    --color-12bit-grey-2            : #cccccc;
-    --color-12bit-grey-1            : #eeeeee;
+    /*--color-12bit-grey-3            : #888888;*/
+    /*--color-12bit-grey-2            : #cccccc;*/
+    /*--color-12bit-grey-1            : #eeeeee;*/
 
     /* use these colors in code ONLY so they have a layer of abstraction */
     --color-background              : var(--color-black);

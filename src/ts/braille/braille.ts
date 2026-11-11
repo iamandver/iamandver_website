@@ -1,8 +1,8 @@
-import "./common.ts";
-import { isTerminalOpen } from "./terminal.ts";
+import "../site/common.ts";
+import { isTerminalOpen } from "../site/terminal.ts";
 
-import { type BrailleCell, BrailleConverter, type BrailleParams } from "./braille_converter.ts";
-import { getPreset, palettePresets }                              from "./braille_palettes.ts";
+import { type BrailleCell, BrailleConverter, type BrailleParams } from "./converter.ts";
+import { getPreset, palettePresets }                              from "./palettes.ts";
 
 window.addEventListener("DOMContentLoaded", init);
 
