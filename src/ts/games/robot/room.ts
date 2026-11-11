@@ -18,8 +18,8 @@ export class RobotRoom
     public readonly exit: Position;
 
     private robotPosition: Position;
-    private readonly cratePositions: Position[] = [];
-    private readonly scrapPositions: Position[] = [];
+    private readonly cratePositions: Position[]  = [];
+    private readonly scrapPositions: Position[]  = [];
     private readonly sentryStates: SentryState[] = [];
 
     private gameStatus: "playing" | "caught" | "complete" = "playing";

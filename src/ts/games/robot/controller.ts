@@ -38,9 +38,18 @@ export class RobotController
 
         this.movement      = new RobotMovement(() => this.room,
                                                () => this.onArrival(),
-                                               { onPickup: () => page.showStatus(this.room) });
+                                               {
+                                                   onPickup: () => page.showStatus(this.room)
+                                               });
+
         this.loop          = new GameLoop(this.update);
-        this.resetControls = page.bindControls(direction => this.movement.press(direction, this.loop.elapsedSinceFrameMS),
+        this.resetControls = page.bindControls(direction =>
+                                               {
+                                                   if (this.movement.press(direction, this.loop.elapsedSinceFrameMS))
+                                                   {
+                                                       this.render();
+                                                   }
+                                               },
                                                () => this.room.status === "playing",
                                                direction => this.movement.release(direction, this.loop.elapsedSinceFrameMS));
 
@@ -126,14 +135,17 @@ export class RobotController
 
     private readonly update = (deltaMS: number): void =>
     {
-        if (this.movement.update(deltaMS))
+        const movementDeltaMS = this.movement.update(deltaMS);
+        if (movementDeltaMS !== undefined)
         {
-            this.render();
+            this.render(movementDeltaMS);
         }
     };
 
-    private render(): void
+    private render(movementDeltaMS = 0): void
     {
-        this.renderer.render(this.room, this.movement.step);
+        const step = this.movement.step;
+        this.renderer.updateAnimation(movementDeltaMS, step !== undefined);
+        this.renderer.render(this.room, step, this.movement.facing);
     }
 }

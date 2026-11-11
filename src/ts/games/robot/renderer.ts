@@ -1,13 +1,16 @@
-import type { Position, RobotRoom }          from "./room.ts";
-import { boardSize, roomSymbols }            from "./levels.ts";
-import type { RobotMovement }                from "./movement.ts";
-import { spriteSheetUrl, sprites, tileSize } from "./sprites.ts";
+import type { Direction }                                               from "../controls.ts";
+import { AnimationPlayer }                                              from "./animation_player.ts";
+import { boardSize, roomSymbols }                                       from "./levels.ts";
+import type { RobotMovement }                                           from "./movement.ts";
+import type { Position, RobotRoom }                                     from "./room.ts";
+import { robotSprites, spriteSheetUrl, sprites, tileSize, type Sprite } from "./sprites.ts";
 
 export class RobotRenderer
 {
     private readonly canvas: HTMLCanvasElement;
     private readonly context: CanvasRenderingContext2D;
     private readonly sheet: HTMLImageElement;
+    private readonly walkAnimation = new AnimationPlayer<Sprite>();
 
     private constructor(canvas: HTMLCanvasElement,
                         context: CanvasRenderingContext2D,
@@ -37,30 +40,56 @@ export class RobotRenderer
         return new RobotRenderer(canvas, context, sheet);
     }
 
-    public render(room: RobotRoom, step: RobotMovement["step"]): void
+    public updateAnimation(deltaMS: number, walking: boolean): void
+    {
+        if (walking)
+        {
+            this.walkAnimation.update(deltaMS);
+        }
+        else
+        {
+            this.walkAnimation.reset();
+        }
+    }
+
+    public render(room: RobotRoom, step: RobotMovement["step"], facing: Direction): void
     {
         const offsetColumn = Math.floor((boardSize.columns - room.rows[0]!.length) / 2);
         const offsetRow    = Math.floor((boardSize.rows - room.rows.length) / 2);
 
-        const drawSprite = (name: keyof typeof sprites, column: number, row: number): void =>
+        const drawSprite = (sprite: Sprite, column: number, row: number, flipX = false): void =>
         {
-            const sprite = sprites[name];
+            const x = Math.round((column + offsetColumn) * tileSize);
+            const y = Math.round((row + offsetRow) * tileSize);
+            if (flipX)
+            {
+                this.context.save();
+                this.context.translate(x + tileSize, 0);
+                this.context.scale(-1, 1);
+            }
+
             this.context.drawImage(this.sheet,
                                    sprite.column * tileSize,
                                    sprite.row * tileSize,
                                    tileSize,
                                    tileSize,
-                                   Math.round((column + offsetColumn) * tileSize),
-                                   Math.round((row + offsetRow) * tileSize),
+                                   flipX ? 0 : x,
+                                   y,
                                    tileSize,
                                    tileSize);
+
+            if (flipX)
+            {
+                this.context.restore();
+            }
         };
 
-        const drawMovingSprite = (name: keyof typeof sprites, from: Position, to: Position, progress: number): void =>
+        const drawMovingSprite = (sprite: Sprite, from: Position, to: Position, progress: number, flipX = false): void =>
         {
-            drawSprite(name,
+            drawSprite(sprite,
                        from.column + (to.column - from.column) * progress,
-                       from.row + (to.row - from.row) * progress);
+                       from.row + (to.row - from.row) * progress,
+                       flipX);
         };
 
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -69,40 +98,41 @@ export class RobotRenderer
         {
             for (const [column, cell] of Array.from(cells).entries())
             {
-                drawSprite(cell === roomSymbols.wall ? "wall" : "floor", column, row);
+                drawSprite(cell === roomSymbols.wall ? sprites.wall : sprites.floor, column, row);
             }
         }
 
-        drawSprite(room.allScrapCollected ? "doorOpen" : "doorClosed", room.exit.column, room.exit.row);
+        drawSprite(room.allScrapCollected ? sprites.doorOpen : sprites.doorClosed, room.exit.column, room.exit.row);
 
-        const sentrySprite = room.allScrapCollected ? "sentryActive" : "sentryPassive";
+        const sentrySprite = room.allScrapCollected ? sprites.sentryActive : sprites.sentryPassive;
         for (const sentry of room.sentries)
         {
             drawSprite(sentrySprite, sentry.column, sentry.row);
         }
         for (const scrap of room.scraps)
         {
-            drawSprite("scrap", scrap.column, scrap.row);
+            drawSprite(sprites.scrap, scrap.column, scrap.row);
         }
         for (const [index, crate] of room.crates.entries())
         {
             if (step?.move.crate?.index === index)
             {
-                drawMovingSprite("crate", step.move.crate.from, step.move.crate.to, step.progress);
+                drawMovingSprite(sprites.crate, step.move.crate.from, step.move.crate.to, step.progress);
             }
             else
             {
-                drawSprite("crate", crate.column, crate.row);
+                drawSprite(sprites.crate, crate.column, crate.row);
             }
         }
 
+        const robot = robotSprites[step?.move.direction ?? facing];
         if (step)
         {
-            drawMovingSprite("robotIdleFront", step.move.from, step.move.to, step.progress);
+            drawMovingSprite(this.walkAnimation.frame(robot.walk), step.move.from, step.move.to, step.progress, robot.flipX);
         }
         else
         {
-            drawSprite("robotIdleFront", room.robot.column, room.robot.row);
+            drawSprite(robot.idle, room.robot.column, room.robot.row, robot.flipX);
         }
     }
 }

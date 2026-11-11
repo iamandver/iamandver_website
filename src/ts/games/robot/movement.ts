@@ -18,6 +18,7 @@ export class RobotMovement
     private readonly heldDirections: Direction[] = [];
 
     private activeMove: RobotMove | undefined;
+    private direction: Direction = "down";
     private elapsed             = 0;
     private elapsedBeforeStepMS = 0;
     private paused              = false;
@@ -38,15 +39,29 @@ export class RobotMovement
         return this.activeMove ? { move: this.activeMove, progress: this.elapsed / this.stepDurationMS } : undefined;
     }
 
-    public press(direction: Direction, elapsedSinceFrameMS: number): void
+    public get facing(): Direction
+    {
+        return this.direction;
+    }
+
+    // Report a turn in place so the controller can redraw while idle.
+    public press(direction: Direction, elapsedSinceFrameMS: number): boolean
     {
         if (this.paused || this.getRoom().status !== "playing" || this.heldDirections.includes(direction))
         {
-            return;
+            return false;
         }
 
         this.heldDirections.push(direction);
+        if (this.activeMove)
+        {
+            return false;
+        }
+
+        const turned   = this.direction !== direction;
+        this.direction = direction;
         this.beginStep(elapsedSinceFrameMS);
+        return turned && !this.activeMove;
     }
 
     public release(direction: Direction, elapsedSinceFrameMS: number): void
@@ -63,6 +78,7 @@ export class RobotMovement
     {
         this.clearInput();
         this.activeMove          = undefined;
+        this.direction           = "down";
         this.elapsed             = 0;
         this.elapsedBeforeStepMS = 0;
     }
@@ -77,19 +93,20 @@ export class RobotMovement
         this.paused = paused;
     }
 
-    // Report whether a step was processed so the controller can redraw the board.
-    public update(deltaMS: number): boolean
+    // Return the time applied to movement, or undefined when no step was processed.
+    public update(deltaMS: number): number | undefined
     {
         if (!this.activeMove || this.paused)
         {
-            return false;
+            return undefined;
         }
 
         // The first frame can include time before the input that started this step.
         const stepDeltaMS        = Math.max(0, deltaMS - this.elapsedBeforeStepMS);
         this.elapsedBeforeStepMS = 0;
         // Limit progress after a long foreground stall to one tile's worth of time.
-        this.elapsed += Math.min(stepDeltaMS, this.stepDurationMS);
+        const movementDeltaMS = Math.min(stepDeltaMS, this.stepDurationMS);
+        this.elapsed += movementDeltaMS;
         while (this.activeMove)
         {
             // Pick up before committing arrival, even when a frame crosses both moments.
@@ -110,13 +127,18 @@ export class RobotMovement
             this.getRoom().move(move.direction);
             this.onArrival();
             this.beginStep();
+
+            if (!this.activeMove && this.getRoom().status === "playing")
+            {
+                this.direction = this.heldDirections.at(-1) ?? this.direction;
+            }
         }
 
         if (!this.activeMove)
         {
             this.elapsed = 0;
         }
-        return true;
+        return movementDeltaMS;
     }
 
     private clearInput(): void
@@ -133,5 +155,9 @@ export class RobotMovement
         const direction          = this.heldDirections.at(-1);
         this.activeMove          = direction ? this.getRoom().getMove(direction) : undefined;
         this.elapsedBeforeStepMS = elapsedBeforeStepMS;
+        if (this.activeMove)
+        {
+            this.direction = this.activeMove.direction;
+        }
     }
 }
