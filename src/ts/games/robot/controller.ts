@@ -1,3 +1,4 @@
+import { AttackAnimation }                                       from "./attack_animation.ts";
 import { GameLoop }                                               from "./game_loop.ts";
 import { getOrderedRooms, type RoomDefinition }                   from "./levels.ts";
 import { RobotMovement }                                          from "./movement.ts";
@@ -16,6 +17,7 @@ export class RobotController
     private readonly movement: RobotMovement;
     private readonly loop: GameLoop;
     private readonly resetControls: () => void;
+    private readonly attack = new AttackAnimation();
 
     private roomIndex: number;
     private room: RobotRoom;
@@ -105,6 +107,7 @@ export class RobotController
 
     private loadRoom(): RobotRoom
     {
+        this.attack.reset();
         const definition = this.rooms[this.roomIndex]!;
         const room       = new RobotRoom(definition.map);
         this.page.showRoom(definition, this.practice);
@@ -136,7 +139,8 @@ export class RobotController
     private readonly update = (deltaMS: number): void =>
     {
         const movementDeltaMS = this.movement.update(deltaMS);
-        if (movementDeltaMS !== undefined)
+        const attackChanged   = this.attack.update(deltaMS, this.room.status === "caught");
+        if (movementDeltaMS !== undefined || attackChanged)
         {
             this.render(movementDeltaMS);
         }
@@ -146,6 +150,6 @@ export class RobotController
     {
         const step = this.movement.step;
         this.renderer.updateAnimation(movementDeltaMS, step !== undefined);
-        this.renderer.render(this.room, step, this.movement.facing);
+        this.renderer.render(this.room, step, this.movement.facing, this.attack.pose);
     }
 }

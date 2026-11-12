@@ -1,9 +1,19 @@
-import type { Direction }                                                             from "../controls.ts";
-import { AnimationPlayer }                                                            from "./animation_player.ts";
-import { boardSize, roomSymbols }                                                     from "./levels.ts";
-import type { RobotMovement }                                                         from "./movement.ts";
-import type { Position, RobotRoom }                                                   from "./room.ts";
-import { robotSprites, spriteSheetUrl, sprites, tileSize, wallSpriteAt, type Sprite } from "./sprites.ts";
+import type { Direction }           from "../controls.ts";
+import { AnimationPlayer, frameAt } from "./animation_player.ts";
+import type { AttackPose }          from "./attack_animation.ts";
+import { boardSize, roomSymbols }   from "./levels.ts";
+import type { RobotMovement }       from "./movement.ts";
+import type { Position, RobotRoom }  from "./room.ts";
+import {
+    attackSprites,
+    objectSprites,
+    robotSprites,
+    spriteSheetUrl,
+    terrainSprites,
+    tileSize,
+    wallSpriteAt,
+    type Sprite
+} from "./sprites.ts";
 
 export class RobotRenderer
 {
@@ -52,7 +62,7 @@ export class RobotRenderer
         }
     }
 
-    public render(room: RobotRoom, step: RobotMovement["step"], facing: Direction): void
+    public render(room: RobotRoom, step: RobotMovement["step"], facing: Direction, attack: AttackPose | undefined): void
     {
         const offsetColumn = Math.floor((boardSize.columns - room.rows[0]!.length) / 2);
         const offsetRow    = Math.floor((boardSize.rows - room.rows.length) / 2);
@@ -98,32 +108,91 @@ export class RobotRenderer
         {
             for (const [column, cell] of Array.from(cells).entries())
             {
-                const sprite = cell === roomSymbols.wall ? wallSpriteAt(room.rows, column, row) : sprites.floor;
+                const sprite = cell === roomSymbols.wall ? wallSpriteAt(room.rows, column, row) : terrainSprites.floor;
                 drawSprite(sprite, column, row);
             }
         }
 
-        drawSprite(room.allScrapCollected ? sprites.doorOpen : sprites.doorClosed, room.exit.column, room.exit.row);
+        drawSprite(room.allScrapCollected ? objectSprites.doorOpen : objectSprites.doorClosed, room.exit.column, room.exit.row);
 
-        const sentrySprite = room.allScrapCollected ? sprites.sentryActive : sprites.sentryPassive;
+        const sentrySprite = room.allScrapCollected ? objectSprites.sentryActive : objectSprites.sentryPassive;
         for (const sentry of room.sentries)
         {
             drawSprite(sentrySprite, sentry.column, sentry.row);
         }
         for (const scrap of room.scraps)
         {
-            drawSprite(sprites.scrap, scrap.column, scrap.row);
+            drawSprite(objectSprites.scrap, scrap.column, scrap.row);
         }
         for (const [index, crate] of room.crates.entries())
         {
             if (step?.move.crate?.index === index)
             {
-                drawMovingSprite(sprites.crate, step.move.crate.from, step.move.crate.to, step.progress);
+                drawMovingSprite(objectSprites.crate, step.move.crate.from, step.move.crate.to, step.progress);
             }
             else
             {
-                drawSprite(sprites.crate, crate.column, crate.row);
+                drawSprite(objectSprites.crate, crate.column, crate.row);
             }
+        }
+
+        const target = room.robot;
+        if (attack?.phase === "charge")
+        {
+            for (const sentry of room.sentries)
+            {
+                if (sentry.triggered)
+                {
+                    drawSprite(attackSprites.sentryPowerUp, sentry.column, sentry.row);
+                }
+            }
+        }
+        else if (attack?.phase === "fire")
+        {
+            const horizontalBeam = frameAt(attackSprites.beamHorizontal, attack.elapsedMS);
+            const verticalBeam   = frameAt(attackSprites.beamVertical, attack.elapsedMS);
+            const targetX        = (target.column + offsetColumn + 0.5) * tileSize;
+            const targetY        = (target.row + offsetRow + 0.5) * tileSize;
+            for (const sentry of room.sentries)
+            {
+                if (!sentry.triggered)
+                {
+                    continue;
+                }
+
+                const stepColumn    = Math.sign(target.column - sentry.column);
+                const stepRow       = Math.sign(target.row - sentry.row);
+                const horizontal    = stepColumn !== 0;
+                const direction     = horizontal ? (stepColumn > 0 ? "right" : "left") : (stepRow > 0 ? "down" : "up");
+                const { clip, flipX } = attackSprites.sentryShoot[direction];
+                drawSprite(frameAt(clip, attack.elapsedMS), sentry.column, sentry.row, flipX);
+
+                const beam     = horizontal ? horizontalBeam : verticalBeam;
+                const sentryX  = (sentry.column + offsetColumn + 0.5) * tileSize;
+                const sentryY  = (sentry.row + offsetRow + 0.5) * tileSize;
+                const distance = Math.abs(target.column - sentry.column) + Math.abs(target.row - sentry.row);
+
+                // The firing pose covers the first tile. Clip the beam halfway into the target tile.
+                this.context.save();
+                this.context.beginPath();
+                this.context.rect(horizontal ? Math.min(sentryX, targetX) : targetX - tileSize / 2,
+                                  horizontal ? targetY - tileSize / 2 : Math.min(sentryY, targetY),
+                                  horizontal ? distance * tileSize : tileSize,
+                                  horizontal ? tileSize : distance * tileSize);
+                this.context.clip();
+                for (let tile = 1; tile <= distance; tile++)
+                {
+                    drawSprite(beam, sentry.column + tile * stepColumn, sentry.row + tile * stepRow);
+                }
+                this.context.restore();
+            }
+            drawSprite(frameAt(attackSprites.robotHit, attack.elapsedMS), target.column, target.row);
+            return;
+        }
+        else if (attack?.phase === "death")
+        {
+            drawSprite(frameAt(attackSprites.robotDeath, attack.elapsedMS), target.column, target.row);
+            return;
         }
 
         const robot = robotSprites[step?.move.direction ?? facing];
@@ -133,7 +202,7 @@ export class RobotRenderer
         }
         else
         {
-            drawSprite(robot.idle, room.robot.column, room.robot.row, robot.flipX);
+            drawSprite(robot.idle, target.column, target.row, robot.flipX);
         }
     }
 }

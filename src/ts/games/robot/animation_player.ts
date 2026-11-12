@@ -20,11 +20,16 @@ export class AnimationPlayer<Frame>
 
     public frame(clip: AnimationClip<Frame>): Frame
     {
-        const elapsedFrames = Math.floor(this.elapsedMS / clip.frameDurationMS);
-        const frameIndex    = clip.mode === "loop"
-                              ? elapsedFrames % clip.frames.length
-                              : Math.min(elapsedFrames, clip.frames.length - 1);
-
-        return clip.frames[frameIndex]!;
+        return frameAt(clip, this.elapsedMS);
     }
+}
+
+export function frameAt<Frame>(clip: AnimationClip<Frame>, elapsedMS: number): Frame
+{
+    const elapsedFrames = Math.floor(elapsedMS / clip.frameDurationMS);
+    const frameIndex    = clip.mode === "loop"
+                          ? elapsedFrames % clip.frames.length
+                          : Math.min(elapsedFrames, clip.frames.length - 1);
+
+    return clip.frames[frameIndex]!;
 }

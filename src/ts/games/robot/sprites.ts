@@ -9,10 +9,12 @@ export const tileSize = 16;
 export type Sprite = Readonly<{ column: number; row: number }>;
 
 // Coordinates are measured in tiles from the top-left of the sheet.
-export const sprites = {
+export const terrainSprites = {
     floor: { column: 0, row: 4 },
-    water: { column: 1, row: 4 },
+    water: { column: 1, row: 4 }
+};
 
+export const objectSprites = {
     crate     : { column: 0, row: 5 },
     scrap     : { column: 1, row: 5 },
     doorClosed: { column: 2, row: 5 },
@@ -56,25 +58,76 @@ export function wallSpriteAt(rows: readonly string[], column: number, row: numbe
     return name === "wall" ? wallSprites.wallStandalone : wallSprites[name];
 }
 
-function walkClip(row: number): AnimationClip<Sprite>
+function rowClip(column: number,
+                 row: number,
+                 frameCount: number,
+                 frameDurationMS: number,
+                 mode: AnimationClip<Sprite>["mode"] = "loop"): AnimationClip<Sprite>
 {
-    return {
-        frames         : [
-            { column: 0, row },
-            { column: 1, row },
-            { column: 2, row },
-            { column: 3, row }
-        ],
-        frameDurationMS: 120,
-        mode           : "loop"
-    };
+    const frames: [Sprite, ...Sprite[]] = [{ column, row }];
+
+    for (let offset = 1; offset < frameCount; offset++)
+    {
+        frames.push({
+                        column: column + offset,
+                        row
+                    });
+    }
+
+    return { frames, frameDurationMS, mode };
 }
 
-const side = { idle: { column: 1, row: 6 }, walk: walkClip(8), flipX: false };
+const walkFrameDurationMS = 120;
+
+const side = {
+    idle : { column: 1, row: 6 },
+    walk : rowClip(0, 8, 4, walkFrameDurationMS),
+    flipX: false
+};
 
 export const robotSprites = {
-    down : { idle: { column: 0, row: 6 }, walk: walkClip(7), flipX: false },
-    up   : { idle: { column: 2, row: 6 }, walk: walkClip(9), flipX: false },
+    down : {
+        idle : { column: 0, row: 6 },
+        walk : rowClip(0, 7, 4, walkFrameDurationMS),
+        flipX: false
+    },
+    up   : {
+        idle : { column: 2, row: 6 },
+        walk : rowClip(0, 9, 4, walkFrameDurationMS),
+        flipX: false
+    },
     left : side,
-    right: { ...side, flipX: true }
+    right: {
+        ...side,
+        flipX: true
+    }
+};
+
+const attackFrameDurationMS = 60;
+const shootLeft             = {
+    clip : rowClip(0, 12, 2, attackFrameDurationMS),
+    flipX: false
+};
+
+export const attackSprites = {
+    sentryPowerUp : {
+        column: 0,
+        row   : 11
+    },
+    sentryShoot   : {
+        down : {
+            clip : rowClip(2, 11, 2, attackFrameDurationMS),
+            flipX: false
+        },
+        left : shootLeft,
+        right: { ...shootLeft, flipX: true },
+        up   : {
+            clip : rowClip(2, 12, 2, attackFrameDurationMS),
+            flipX: false
+        }
+    },
+    beamHorizontal: rowClip(0, 13, 2, attackFrameDurationMS),
+    beamVertical  : rowClip(2, 13, 2, attackFrameDurationMS),
+    robotHit      : rowClip(0, 14, 2, attackFrameDurationMS),
+    robotDeath    : rowClip(0, 15, 4, 100, "once")
 };
